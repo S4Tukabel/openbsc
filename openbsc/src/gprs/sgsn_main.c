@@ -56,6 +56,8 @@
 
 #include <gtp.h>
 
+#include <mylib/NwGtpv2c.h>
+
 #include "../../bscconfig.h"
 
 #define _GNU_SOURCE
@@ -292,6 +294,9 @@ int main(int argc, char **argv)
 	struct gsm_network dummy_network;
 	int rc;
 
+        //TUKABEL ODJEBAŤ
+        nwGtpv2cInitialize( NULL );
+        
 	tall_bsc_ctx = talloc_named_const(NULL, 0, "osmo_sgsn");
 	tall_msgb_ctx = talloc_named_const(tall_bsc_ctx, 0, "msgb");
 
