@@ -86,3 +86,5 @@ tests/testsuite.log
 
 
 src/openbsc.cfg*
+
+nbproject/*
