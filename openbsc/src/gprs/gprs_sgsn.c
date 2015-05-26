@@ -783,3 +783,8 @@ void sgsn_inst_init()
 	osmo_timer_schedule(&sgsn->llme_timer, GPRS_LLME_CHECK_TICK, 0);
 }
 
+/* S4 Tukabel */
+int sgsn_mm_ctx_is_epc_capable(struct sgsn_mm_ctx *mmctx)
+{
+	return (mmctx->ms_network_capa.len >= 3 && (mmctx->ms_network_capa.buf[2] & 0b100));
+}
