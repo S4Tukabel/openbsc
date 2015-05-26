@@ -161,6 +161,10 @@ struct sgsn_ggsn_ctx *sgsn_mm_ctx_find_ggsn_ctx(struct sgsn_mm_ctx *mmctx,
 						struct tlv_parsed *tp,
 						enum gsm48_gsm_cause *gsm_cause);
 
+/* Determines whether the EPC capability flag is present and set in */
+/* MS Network Capability IE */
+int sgsn_mm_ctx_is_epc_capable(struct sgsn_mm_ctx *mmctx);
+
 enum pdp_ctx_state {
 	PDP_STATE_NONE,
 	PDP_STATE_CR_REQ,
