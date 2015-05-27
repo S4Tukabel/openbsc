@@ -784,6 +784,9 @@ void sgsn_inst_init()
 }
 
 /* S4 Tukabel */
+
+/* Determines whether the EPC capability flag is present and set in */
+/* MS Network Capability IE  (TS 24.008 v10.15.0 section 10.5.5.12)*/
 int sgsn_mm_ctx_is_epc_capable(struct sgsn_mm_ctx *mmctx)
 {
 	return (mmctx->ms_network_capa.len >= 3 && (mmctx->ms_network_capa.buf[2] & 0b100));

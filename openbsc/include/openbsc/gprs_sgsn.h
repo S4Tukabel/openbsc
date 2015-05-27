@@ -12,6 +12,8 @@
 
 #include <openbsc/gsm_data.h>
 
+#include "gprs_sgsn.h"
+
 #define GSM_IMSI_LENGTH 17
 #define GSM_IMEI_LENGTH 17
 #define GSM_EXTENSION_LENGTH 15
@@ -162,7 +164,7 @@ struct sgsn_ggsn_ctx *sgsn_mm_ctx_find_ggsn_ctx(struct sgsn_mm_ctx *mmctx,
 						enum gsm48_gsm_cause *gsm_cause);
 
 /* Determines whether the EPC capability flag is present and set in */
-/* MS Network Capability IE */
+/* MS Network Capability IE  (TS 24.008 v10.15.0 section 10.5.5.12)*/
 int sgsn_mm_ctx_is_epc_capable(struct sgsn_mm_ctx *mmctx);
 
 enum pdp_ctx_state {

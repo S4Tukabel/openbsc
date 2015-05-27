@@ -56,6 +56,8 @@
 
 #include <pdp.h>
 
+#include <openbsc/sgsn_s4.h>
+
 #define PTMSI_ALLOC
 
 /* Section 11.2.2 / Table 11.3a GPRS Mobility management timers – MS side */
@@ -1849,33 +1851,72 @@ static int gsm0408_rcv_gsm(struct sgsn_mm_ctx *mmctx, struct msgb *msg,
 		return sgsn_force_reattach_oldmsg(msg);
 	}
 
-	switch (gh->msg_type) {
-	case GSM48_MT_GSM_ACT_PDP_REQ:
-		rc = gsm48_rx_gsm_act_pdp_req(mmctx, msg);
-		break;
-	case GSM48_MT_GSM_DEACT_PDP_REQ:
-		rc = gsm48_rx_gsm_deact_pdp_req(mmctx, msg);
-		break;
-	case GSM48_MT_GSM_DEACT_PDP_ACK:
-		rc = gsm48_rx_gsm_deact_pdp_ack(mmctx, msg);
-		break;
-	case GSM48_MT_GSM_STATUS:
-		rc = gsm48_rx_gsm_status(mmctx, msg);
-		break;
-	case GSM48_MT_GSM_REQ_PDP_ACT_REJ:
-	case GSM48_MT_GSM_ACT_AA_PDP_REQ:
-	case GSM48_MT_GSM_DEACT_AA_PDP_REQ:
-		LOGMMCTXP(LOGL_NOTICE, mmctx, "Unimplemented GSM 04.08 GSM msg type 0x%02x\n",
-			gh->msg_type);
-		rc = gsm48_tx_sm_status(mmctx, GSM_CAUSE_MSGT_NOTEXIST_NOTIMPL);
-		break;
-	default:
-		LOGMMCTXP(LOGL_NOTICE, mmctx, "Unknown GSM 04.08 GSM msg type 0x%02x\n",
-			gh->msg_type);
-		rc = gsm48_tx_sm_status(mmctx, GSM_CAUSE_MSGT_NOTEXIST_NOTIMPL);
-		break;
+        /* TUKABEL: Redirect ECP capable UEs to SGW  */
+        if (sgsn_mm_ctx_is_epc_capable(mmctx)) {
+            LOGMMCTXP(LOGL_DEBUG, mmctx, "EPC capable message msg_type= %d\n", gh->msg_type);
+            
+            switch (gh->msg_type) {
+            case GSM48_MT_GSM_ACT_PDP_REQ:
+                
+                    rc = sgsn_s4_send_create_session_request();
+                    //
+                    rc = gsm48_rx_gsm_act_pdp_req(mmctx, msg);
+                    break;
+            case GSM48_MT_GSM_DEACT_PDP_REQ:
+                    rc = gsm48_rx_gsm_deact_pdp_req(mmctx, msg);
+                    break;
+            case GSM48_MT_GSM_DEACT_PDP_ACK:
+                    rc = gsm48_rx_gsm_deact_pdp_ack(mmctx, msg);
+                    break;
+            case GSM48_MT_GSM_STATUS:
+                    rc = gsm48_rx_gsm_status(mmctx, msg);
+                    break;
+            case GSM48_MT_GSM_REQ_PDP_ACT_REJ:
+            case GSM48_MT_GSM_ACT_AA_PDP_REQ:
+            case GSM48_MT_GSM_DEACT_AA_PDP_REQ:
+                    LOGMMCTXP(LOGL_NOTICE, mmctx, "Unimplemented GSM 04.08 GSM msg type 0x%02x\n",
+                            gh->msg_type);
+                    rc = gsm48_tx_sm_status(mmctx, GSM_CAUSE_MSGT_NOTEXIST_NOTIMPL);
+                    break;
+            default:
+                    LOGMMCTXP(LOGL_NOTICE, mmctx, "Unknown GSM 04.08 GSM msg type 0x%02x\n",
+                            gh->msg_type);
+                    rc = gsm48_tx_sm_status(mmctx, GSM_CAUSE_MSGT_NOTEXIST_NOTIMPL);
+                    break;
 
-	}
+            }
+            
+        } else { // NOT EPC capable UE
+            
+            
+            switch (gh->msg_type) {
+            case GSM48_MT_GSM_ACT_PDP_REQ:
+                    rc = gsm48_rx_gsm_act_pdp_req(mmctx, msg);
+                    break;
+            case GSM48_MT_GSM_DEACT_PDP_REQ:
+                    rc = gsm48_rx_gsm_deact_pdp_req(mmctx, msg);
+                    break;
+            case GSM48_MT_GSM_DEACT_PDP_ACK:
+                    rc = gsm48_rx_gsm_deact_pdp_ack(mmctx, msg);
+                    break;
+            case GSM48_MT_GSM_STATUS:
+                    rc = gsm48_rx_gsm_status(mmctx, msg);
+                    break;
+            case GSM48_MT_GSM_REQ_PDP_ACT_REJ:
+            case GSM48_MT_GSM_ACT_AA_PDP_REQ:
+            case GSM48_MT_GSM_DEACT_AA_PDP_REQ:
+                    LOGMMCTXP(LOGL_NOTICE, mmctx, "Unimplemented GSM 04.08 GSM msg type 0x%02x\n",
+                            gh->msg_type);
+                    rc = gsm48_tx_sm_status(mmctx, GSM_CAUSE_MSGT_NOTEXIST_NOTIMPL);
+                    break;
+            default:
+                    LOGMMCTXP(LOGL_NOTICE, mmctx, "Unknown GSM 04.08 GSM msg type 0x%02x\n",
+                            gh->msg_type);
+                    rc = gsm48_tx_sm_status(mmctx, GSM_CAUSE_MSGT_NOTEXIST_NOTIMPL);
+                    break;
+
+            }
+        }
 
 	return rc;
 }
