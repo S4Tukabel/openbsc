@@ -5,22 +5,26 @@
  * Created on May 27, 2015, 8:05 PM
  */
 
+    
+
 #ifndef SGSN_S4_H
 #define	SGSN_S4_H
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
-    
 #include <stdio.h>
 #include <assert.h>
+
+#include <openbsc/gprs_sgsn.h>
 
 #include <mylib/tree.h>
 #include <mylib/NwLog.h>
 #include <mylib/NwTypes.h>
 #include <mylib/NwGtpv2c.h>
 #include <mylib/NwGtpv2cMsgParser.h>
+    
+
+#ifdef	__cplusplus
+extern "C" {
+#endif
 
 typedef enum
 {
@@ -127,7 +131,7 @@ typedef struct NwSaeGwUe
   RB_ENTRY (NwSaeGwUe)          uePgwSessionRbtNode;                      /**< RB Tree Data Structure Node        */
 } NwSaeGwUeT;
 
-
+NwRcT sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, struct sgsn_mm_ctx *mmctx);
 #ifdef	__cplusplus
 }
 #endif

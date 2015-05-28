@@ -12,7 +12,6 @@
 #include <mylib/NwGtpv2cIe.h>
 #include <mylib/NwGtpv2cMsg.h>
 
-#include "openbsc/gprs_sgsn.h"
 //#include <mylib/NwSaeGwUlp.h>
 
  /* 29.274 IMSI, MSISDN - appedn with 1 bits*/
@@ -45,9 +44,8 @@ static void imsi_str2arr(char *str, NwU8T *imsi)
 	}
 }
 
-static NwRcT
-sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, /*NwGtpv2cUlpTrxnHandleT hTrxn, */
-    sgsn_mm_ctx *mmctx) 
+NwRcT
+sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, /*NwGtpv2cUlpTrxnHandleT hTrxn, */ struct sgsn_mm_ctx *mmctx) 
 {
   NwRcT rc;
   NwGtpv2cUlpApiT       ulpReq;
@@ -105,7 +103,7 @@ sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, /*NwGtpv2cUlpTrxnHandleT h
   paa.ipv4Addr[1] = 0x00;
   paa.ipv4Addr[2] = 0x00;
   paa.ipv4Addr[3] = 0x00;
-  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_PAA, sizeof(>paa), 0, (NwU8T*)&paa);
+  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_PAA, sizeof(paa), 0, (NwU8T*)&paa);
   NW_ASSERT( NW_OK == rc );
 
   //// potade sme sa dotrepali
@@ -130,8 +128,10 @@ sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, /*NwGtpv2cUlpTrxnHandleT h
       NULL);
   NW_ASSERT( NW_OK == rc );
 
-#pragma pack(1)
-  struct {
+ 
+// pragma replaced with _attribute((packed))
+//#pragma pack(1)
+  struct __attribute__((packed)){
     NwU8T arp;
     NwU8T labelQci;
     NwU8T maximumBitRateUplink[5];
@@ -139,7 +139,7 @@ sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, /*NwGtpv2cUlpTrxnHandleT h
     NwU8T  guaranteedBitRateUplink[5];
     NwU8T  guaranteedBitRateDownlink[5];
   } bearerQos;
-#pragma pack()
+//#pragma pack()
 
   bearerQos.arp                         = 0x01;
   bearerQos.labelQci                    = 0x01;
@@ -164,7 +164,7 @@ sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, /*NwGtpv2cUlpTrxnHandleT h
   ulpReq.apiType = (NW_GTPV2C_ULP_API_INITIAL_REQ | NW_GTPV2C_ULP_API_FLAG_CREATE_LOCAL_TUNNEL);
 
   ulpReq.apiInfo.initialReqInfo.hTunnel         = 0;                       
-  ulpReq.apiInfo.initialReqInfo.hUlpTrxn        = hTrxn;                        /* Save the trxn for Response */
+  ulpReq.apiInfo.initialReqInfo.hUlpTrxn        = 0; ///tukabel zero/// hTrxn;                        /* Save the trxn for Response */
   ulpReq.apiInfo.initialReqInfo.hUlpTunnel      = (NwGtpv2cUlpTrxnHandleT)thiz;
   ulpReq.apiInfo.initialReqInfo.teidLocal       = (NwGtpv2cUlpTrxnHandleT)thiz;
   ulpReq.apiInfo.initialReqInfo.peerIp          = htonl(thiz->s5s8cTunnel.fteidPgw.ipv4Addr);
