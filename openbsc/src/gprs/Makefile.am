@@ -21,14 +21,16 @@ osmo_gbproxy_SOURCES =  gb_proxy.c gb_proxy_main.c gb_proxy_vty.c \
 			gb_proxy_patch.c gb_proxy_tlli.c gb_proxy_peer.c \
 			gprs_gb_parse.c gprs_llc_parse.c crc24.c gprs_utils.c
 osmo_gbproxy_LDADD = 	$(top_builddir)/src/libcommon/libcommon.a \
-			$(OSMO_LIBS) -lrt
+			$(OSMO_LIBS) -lrt -levent 
 
 osmo_sgsn_SOURCES =	gprs_gmm.c gprs_sgsn.c gprs_sndcp.c gprs_sndcp_vty.c \
 			sgsn_main.c sgsn_vty.c sgsn_libgtp.c \
 			gprs_llc.c gprs_llc_parse.c gprs_llc_vty.c crc24.c \
 			sgsn_ctrl.c sgsn_auth.c gprs_subscriber.c \
 			gprs_gsup_messages.c gprs_utils.c gprs_gsup_client.c \
-			gsm_04_08_gprs.c sgsn_cdr.c sgsn_s4.c
+			gsm_04_08_gprs.c sgsn_cdr.c sgsn_s4.c \
+			NwMiniLogMgrEntity.c NwMiniTmrMgrEntity.c \
+			NwMiniUlpEntity.c NwMiniUdpEntity.c
 osmo_sgsn_LDADD = 	\
 			$(top_builddir)/src/libcommon/libcommon.a \
-			-lgtp $(OSMO_LIBS) $(LIBOSMOABIS_LIBS) -lrt
+			-lgtp $(OSMO_LIBS) $(LIBOSMOABIS_LIBS) -lrt -levent -lgtp

@@ -131,7 +131,10 @@ typedef struct NwSaeGwUe
   RB_ENTRY (NwSaeGwUe)          uePgwSessionRbtNode;                      /**< RB Tree Data Structure Node        */
 } NwSaeGwUeT;
 
-NwRcT sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, struct sgsn_mm_ctx *mmctx);
+//sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT hTrxn, */ struct sgsn_mm_ctx *mmctx);
+
+void S4Initialize(NwU8T localIpStr[20], NwU8T targetIpStr[20]);
+
 #ifdef	__cplusplus
 }
 #endif
