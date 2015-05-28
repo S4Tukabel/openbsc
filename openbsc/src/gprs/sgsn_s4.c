@@ -71,142 +71,142 @@ static void imsi_str2arr(char *str, NwU8T *imsi)
 	}
 }
 
-//NwRcT
-//sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT hTrxn, */ struct sgsn_mm_ctx *mmctx) 
-//{
-//  NwRcT rc;
-//  NwGtpv2cUlpApiT       ulpReq;
-//  NwU8T imsi[8];
-//  NwU8T msisdn[8];
-//  NwU8T mei[8];
-//  NwU8T service_network[3];
-//  NwSaeGwPaaT paa;
-//  NwU8T apn[] = "internet";  
-//  NwU32T ip_addr = inet_ntoa("127.0.0.4");
-//
-////  rc = nwGtpv2cMsgNew( thiz->hGtpv2cStackSgwS5,
-////      NW_TRUE,                                          /* TIED present*/
-////      NW_GTP_CREATE_SESSION_REQ,                        /* Msg Type    */
-////      0,                                                /* TEID        */
-////      0,                                                /* Seq Number  */
-////      &(ulpReq.hMsg));
-//
-//  NW_ASSERT( NW_OK == rc );
-//  
-//  imsi_str2arr(mmctx->imsi, imsi);
-//  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_IMSI, 8, 0, imsi);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  imsi_str2arr(mmctx->msisdn, msisdn);
-//  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_MSISDN, 8, 0, msisdn);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  imsi_str2arr(mmctx->imei, mei);
-//  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_MEI, 8, 0, mei);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  /* 2 = GAN*/
-//  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_RAT_TYPE, 0, 4);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  /* Service NW = MCC + MNC (part of imsi)*/
-//  memcpy(service_network, imsi, 3);
-//  service_network[2] |= 0xf0;
-//  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_SERVING_NETWORK, 3, 0, service_network);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  // TODO: IPv4
-//  rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg), NW_GTPV2C_IE_INSTANCE_ZERO, NW_GTPV2C_IFTYPE_S4_SGSN_GTPC, (NwU32T)mmctx, ip_addr, NULL);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_SELECTION_MODE, 0, 0x02);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_PDN_TYPE, 0, NW_PDN_TYPE_IPv4);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  paa.pdnType = NW_PDN_TYPE_IPv4;
-//  // TODO: ipv4Addr
-//  paa.ipv4Addr[0] = 0x00;
-//  paa.ipv4Addr[1] = 0x00;
-//  paa.ipv4Addr[2] = 0x00;
-//  paa.ipv4Addr[3] = 0x00;
-//  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_PAA, sizeof(paa), 0, (NwU8T*)&paa);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  // TODO: APN detect
-//  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_APN, strlen(apn), NW_GTPV2C_IE_INSTANCE_ZERO, apn);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  //// NO APN RESTRICTION
-//  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_APN_RESTRICTION, 0, 0);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  rc = nwGtpv2cMsgGroupedIeStart((ulpReq.hMsg), NW_GTPV2C_IE_BEARER_CONTEXT, 0);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_EBI, NW_GTPV2C_IE_INSTANCE_ZERO, 5);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  // TODO: IPv4 NwU32T
-//  rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg),
-//      NW_GTPV2C_IE_INSTANCE_TWO,
-//      NW_GTPV2C_IFTYPE_S4_SGSN_GTPU,
-//      ((NwU32T)(3)),
-//      ip_addr,
-//      NULL);
-//  NW_ASSERT( NW_OK == rc );
-//
-// 
-//// pragma replaced with _attribute((packed))
-////#pragma pack(1)
-//  struct __attribute__((packed)){
-//    NwU8T arp;
-//    NwU8T labelQci;
-//    NwU8T maximumBitRateUplink[5];
-//    NwU8T maximumBitRateDownlink[5];
-//    NwU8T  guaranteedBitRateUplink[5];
-//    NwU8T  guaranteedBitRateDownlink[5];
-//  } bearerQos;
-////#pragma pack()
-//
-//  bearerQos.arp                         = 0x01;
-//  bearerQos.labelQci                    = 0x01;
-//
-//  memset(bearerQos.maximumBitRateUplink, 0x00,5);
-//  memset(bearerQos.maximumBitRateDownlink, 0x00,5);
-//  memset(bearerQos.guaranteedBitRateUplink, 0x00,5);
-//  memset(bearerQos.guaranteedBitRateDownlink, 0x00,5);
-//
-//
-//  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_BEARER_LEVEL_QOS, sizeof(bearerQos), 0, (NwU8T*)&bearerQos);
-//  NW_ASSERT( NW_OK == rc );
-//
-//
-//  rc = nwGtpv2cMsgGroupedIeEnd((ulpReq.hMsg));
-//  NW_ASSERT( NW_OK == rc );
-//
-//  /* End - Encoding of grouped IE "bearer context created" */
-//
-//  /* Send Create Session Request to PGW */
-//
-//  ulpReq.apiType = (NW_GTPV2C_ULP_API_INITIAL_REQ | NW_GTPV2C_ULP_API_FLAG_CREATE_LOCAL_TUNNEL);
-//
-//  ulpReq.apiInfo.initialReqInfo.hTunnel         = 0;                       
-//  ulpReq.apiInfo.initialReqInfo.hUlpTrxn        = 0; ///tukabel zero/// hTrxn;                        /* Save the trxn for Response */
-////  ulpReq.apiInfo.initialReqInfo.hUlpTunnel      = (NwGtpv2cUlpTrxnHandleT)thiz;
-////  ulpReq.apiInfo.initialReqInfo.teidLocal       = (NwGtpv2cUlpTrxnHandleT)thiz;
-//  ulpReq.apiInfo.initialReqInfo.peerIp          = htonl(thiz->s5s8cTunnel.fteidPgw.ipv4Addr);
-//
-//  //rc = nwGtpv2cProcessUlpReq(thiz->hGtpv2cStackSgwS5, &ulpReq);
-//  NW_ASSERT( NW_OK == rc );
-//
-//  //thiz->s5s8cTunnel.hSgwLocalTunnel = ulpReq.apiInfo.initialReqInfo.hTunnel;
-//
-//  LOGMMCTXP(LOGL_INFO, mmctx, "-> CREATE SESSION REQ: IMSI=%s <TUKABEL>\n", mmctx->imsi);
-//
-//  return rc;
-//}
+NwRcT
+sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT hTrxn, */ struct sgsn_mm_ctx *mmctx) 
+{
+  NwRcT rc;
+  NwGtpv2cUlpApiT       ulpReq;
+  NwU8T imsi[8];
+  NwU8T msisdn[8];
+  NwU8T mei[8];
+  NwU8T service_network[3];
+  NwSaeGwPaaT paa;
+  NwU8T apn[] = "internet";  
+  NwU32T ip_addr = inet_addr ("127.0.0.4");
+
+//  rc = nwGtpv2cMsgNew( thiz->hGtpv2cStackSgwS5,
+//      NW_TRUE,                                          /* TIED present*/
+//      NW_GTP_CREATE_SESSION_REQ,                        /* Msg Type    */
+//      0,                                                /* TEID        */
+//      0,                                                /* Seq Number  */
+//      &(ulpReq.hMsg));
+
+  NW_ASSERT( NW_OK == rc );
+  
+  imsi_str2arr(mmctx->imsi, imsi);
+  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_IMSI, 8, 0, imsi);
+  NW_ASSERT( NW_OK == rc );
+
+  imsi_str2arr(mmctx->msisdn, msisdn);
+  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_MSISDN, 8, 0, msisdn);
+  NW_ASSERT( NW_OK == rc );
+
+  imsi_str2arr(mmctx->imei, mei);
+  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_MEI, 8, 0, mei);
+  NW_ASSERT( NW_OK == rc );
+
+  /* 2 = GAN*/
+  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_RAT_TYPE, 0, 4);
+  NW_ASSERT( NW_OK == rc );
+
+  /* Service NW = MCC + MNC (part of imsi)*/
+  memcpy(service_network, imsi, 3);
+  service_network[2] |= 0xf0;
+  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_SERVING_NETWORK, 3, 0, service_network);
+  NW_ASSERT( NW_OK == rc );
+
+  // TODO: IPv4
+  rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg), NW_GTPV2C_IE_INSTANCE_ZERO, NW_GTPV2C_IFTYPE_S4_SGSN_GTPC, (NwU32T)mmctx, ip_addr, NULL);
+  NW_ASSERT( NW_OK == rc );
+
+  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_SELECTION_MODE, 0, 0x02);
+  NW_ASSERT( NW_OK == rc );
+
+  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_PDN_TYPE, 0, NW_PDN_TYPE_IPv4);
+  NW_ASSERT( NW_OK == rc );
+
+  paa.pdnType = NW_PDN_TYPE_IPv4;
+  // TODO: ipv4Addr
+  paa.ipv4Addr[0] = 0x00;
+  paa.ipv4Addr[1] = 0x00;
+  paa.ipv4Addr[2] = 0x00;
+  paa.ipv4Addr[3] = 0x00;
+  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_PAA, sizeof(paa), 0, (NwU8T*)&paa);
+  NW_ASSERT( NW_OK == rc );
+
+  // TODO: APN detect
+  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_APN, strlen(apn), NW_GTPV2C_IE_INSTANCE_ZERO, apn);
+  NW_ASSERT( NW_OK == rc );
+
+  //// NO APN RESTRICTION
+  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_APN_RESTRICTION, 0, 0);
+  NW_ASSERT( NW_OK == rc );
+
+  rc = nwGtpv2cMsgGroupedIeStart((ulpReq.hMsg), NW_GTPV2C_IE_BEARER_CONTEXT, 0);
+  NW_ASSERT( NW_OK == rc );
+
+  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_EBI, NW_GTPV2C_IE_INSTANCE_ZERO, 5);
+  NW_ASSERT( NW_OK == rc );
+
+  // TODO: IPv4 NwU32T
+  rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg),
+      NW_GTPV2C_IE_INSTANCE_TWO,
+      NW_GTPV2C_IFTYPE_S4_SGSN_GTPU,
+      ((NwU32T)(3)),
+      ip_addr,
+      NULL);
+  NW_ASSERT( NW_OK == rc );
+
+ 
+// pragma replaced with _attribute((packed))
+//#pragma pack(1)
+  struct __attribute__((packed)){
+    NwU8T arp;
+    NwU8T labelQci;
+    NwU8T maximumBitRateUplink[5];
+    NwU8T maximumBitRateDownlink[5];
+    NwU8T  guaranteedBitRateUplink[5];
+    NwU8T  guaranteedBitRateDownlink[5];
+  } bearerQos;
+//#pragma pack()
+
+  bearerQos.arp                         = 0x01;
+  bearerQos.labelQci                    = 0x01;
+
+  memset(bearerQos.maximumBitRateUplink, 0x00,5);
+  memset(bearerQos.maximumBitRateDownlink, 0x00,5);
+  memset(bearerQos.guaranteedBitRateUplink, 0x00,5);
+  memset(bearerQos.guaranteedBitRateDownlink, 0x00,5);
+
+
+  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_BEARER_LEVEL_QOS, sizeof(bearerQos), 0, (NwU8T*)&bearerQos);
+  NW_ASSERT( NW_OK == rc );
+
+
+  rc = nwGtpv2cMsgGroupedIeEnd((ulpReq.hMsg));
+  NW_ASSERT( NW_OK == rc );
+
+  /* End - Encoding of grouped IE "bearer context created" */
+
+  /* Send Create Session Request to PGW */
+
+  ulpReq.apiType = (NW_GTPV2C_ULP_API_INITIAL_REQ | NW_GTPV2C_ULP_API_FLAG_CREATE_LOCAL_TUNNEL);
+
+  ulpReq.apiInfo.initialReqInfo.hTunnel         = 0;                       
+  ulpReq.apiInfo.initialReqInfo.hUlpTrxn        = 0; ///tukabel zero/// hTrxn;                        /* Save the trxn for Response */
+//  ulpReq.apiInfo.initialReqInfo.hUlpTunnel      = (NwGtpv2cUlpTrxnHandleT)thiz;
+//  ulpReq.apiInfo.initialReqInfo.teidLocal       = (NwGtpv2cUlpTrxnHandleT)thiz;
+  ulpReq.apiInfo.initialReqInfo.peerIp          = htonl(thiz->s5s8cTunnel.fteidPgw.ipv4Addr);
+
+  //rc = nwGtpv2cProcessUlpReq(thiz->hGtpv2cStackSgwS5, &ulpReq);
+  NW_ASSERT( NW_OK == rc );
+
+  //thiz->s5s8cTunnel.hSgwLocalTunnel = ulpReq.apiInfo.initialReqInfo.hTunnel;
+
+  LOGMMCTXP(LOGL_INFO, mmctx, "-> CREATE SESSION REQ: IMSI=%s <TUKABEL>\n", mmctx->imsi);
+
+  return rc;
+}
 
 
 void S4Initialize(NwU8T localIpStr[20], NwU8T targetIpStr[20])
