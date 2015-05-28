@@ -22,10 +22,10 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#include "NwEvt.h"
+#include "openbsc/NwEvt.h"
 #include <mylib/NwGtpv2c.h>
-#include "NwMiniLogMgrEntity.h"
-#include "NwMiniUdpEntity.h"
+#include "openbsc/NwMiniLogMgrEntity.h"
+#include "openbsc/NwMiniUdpEntity.h"
 
 #ifndef NW_ASSERT
 #define NW_ASSERT assert

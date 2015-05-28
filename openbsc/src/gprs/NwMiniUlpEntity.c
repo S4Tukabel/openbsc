@@ -15,13 +15,13 @@
 #include <string.h>
 #include <assert.h>
 #include <sys/time.h>
-#include "NwEvt.h"
+#include "openbsc/NwEvt.h"
 #include <mylib/NwGtpv2c.h>
 #include <mylib/NwGtpv2cIe.h>
 #include <mylib/NwGtpv2cMsg.h>
 #include <mylib/NwGtpv2cMsgParser.h>
-#include "NwMiniLogMgrEntity.h"
-#include "NwMiniUlpEntity.h"
+#include "openbsc/NwMiniLogMgrEntity.h"
+#include "openbsc/NwMiniUlpEntity.h"
 
 #ifndef NW_ASSERT
 #define NW_ASSERT assert

@@ -57,7 +57,7 @@
 #include <gtp.h>
 
 #include <mylib/NwGtpv2c.h>
-#include <sgsn_s4.h>
+#include <openbsc/sgsn_s4.h>
 
 #include "../../bscconfig.h"
 

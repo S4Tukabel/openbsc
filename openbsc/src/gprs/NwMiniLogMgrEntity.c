@@ -13,13 +13,13 @@
 
 #include <stdio.h>
 #include <assert.h>
-#include "NwEvt.h"
+#include "openbsc/NwEvt.h"
 #include <mylib/NwTypes.h>
 #include <mylib/NwError.h>
 #include <mylib/NwLog.h>
 #include <mylib/NwGtpv2c.h>
 
-#include "NwMiniLogMgrEntity.h"
+#include "openbsc/NwMiniLogMgrEntity.h"
 
 #ifdef __cplusplus 
 extern "C" {

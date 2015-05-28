@@ -10,13 +10,13 @@
  * @file NwMiniTmrMgrEntity.c
  * @brief This file ontains example of a minimalistic timer manager entity.
 */
-
+#define __WITH_LIBEVENT__
 #include <stdio.h>
 #include <assert.h>
-#include "NwEvt.h"
+#include "openbsc/NwEvt.h"
 #include <mylib/NwGtpv2c.h>
-#include "NwMiniLogMgrEntity.h"
-#include "NwMiniTmrMgrEntity.h"
+#include "openbsc/NwMiniLogMgrEntity.h"
+#include "openbsc/NwMiniTmrMgrEntity.h"
 
 #ifndef NW_ASSERT
 #define NW_ASSERT assert

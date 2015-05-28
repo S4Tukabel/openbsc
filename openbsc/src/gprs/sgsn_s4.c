@@ -6,17 +6,18 @@
 #include <assert.h>
 #include <signal.h>
 
-#include "NwEvt.h"
+
 #include <mylib/NwLog.h>
 #include <mylib/NwGtpv2c.h>
-#include "NwMiniLogMgrEntity.h"
-#include "NwMiniTmrMgrEntity.h"
-#include "NwMiniUdpEntity.h"
-#include "NwMiniUlpEntity.h"
+
+#include "openbsc/NwEvt.h"
+#include "openbsc/NwMiniLogMgrEntity.h"
+#include "openbsc/NwMiniTmrMgrEntity.h"
+#include "openbsc/NwMiniUdpEntity.h"
+#include "openbsc/NwMiniUlpEntity.h"
 
 #include <mylib/NwTypes.h>
 #include <mylib/NwError.h>
-#include <mylib/NwUtils.h>
 //#include <mylib/NwLogMgr.h>
 //#include <mylib/NwSaeGwUeLog.h>
 //#include <mylib/NwSaeGwUeState.h>
@@ -337,6 +338,4 @@ static void S4Initialize(NwU8T localIpStr[20], NwU8T targetIpStr[20])
   {
     NW_LOG(NW_LOG_LEVEL_ERRO, "Failed to finalize gtpv2c stack instance. Error '%u' occured", rc);
   }
-
-  return rc;
 }
