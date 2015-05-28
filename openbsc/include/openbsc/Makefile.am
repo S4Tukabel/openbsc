@@ -1,3 +1,8 @@
+nwepc_HEADERS = NwMiniLogMgrEntity.h NwMiniTmrMgrEntity.h \
+		NwMiniUdpEntity.h NwMiniUlpEntity.h \
+		NwEvt.h \
+		
+
 noinst_HEADERS = abis_nm.h abis_rsl.h db.h gsm_04_08.h gsm_data.h \
 		 gsm_subscriber.h gsm_04_11.h debug.h signal.h \
 		 misdn.h chan_alloc.h paging.h ctrl.h \
@@ -16,10 +21,8 @@ noinst_HEADERS = abis_nm.h abis_rsl.h db.h gsm_04_08.h gsm_data.h \
 		arfcn_range_encode.h nat_rewrite_trie.h bsc_nat_callstats.h \
 		osmux.h mgcp_transcode.h gprs_utils.h \
 		 gprs_gb_parse.h smpp.h meas_feed.h gprs_gsup_messages.h \
-		 gprs_gsup_client.h bsc_msg_filter.h sgsn_s4.h \
-		 NwMiniLogMgrEntity.h NwMiniTmrMgrEntity.h \
-		 NwMiniUdpEntity.h NwMiniUlpEntity.h \
-		 NwEvt.h
+		 gprs_gsup_client.h bsc_msg_filter.h sgsn_s4.h
+		 
 
 openbsc_HEADERS = gsm_04_08.h meas_rep.h bsc_api.h
 openbscdir = $(includedir)/openbsc
