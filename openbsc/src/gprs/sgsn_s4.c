@@ -45,7 +45,7 @@ static void imsi_str2arr(char *str, NwU8T *imsi)
 }
 
 NwRcT
-sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, /*NwGtpv2cUlpTrxnHandleT hTrxn, */ struct sgsn_mm_ctx *mmctx) 
+sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT hTrxn, */ struct sgsn_mm_ctx *mmctx) 
 {
   NwRcT rc;
   NwGtpv2cUlpApiT       ulpReq;
@@ -54,6 +54,8 @@ sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, /*NwGtpv2cUlpTrxnHandleT h
   NwU8T mei[8];
   NwU8T service_network[3];
   NwSaeGwPaaT paa;
+  NwU8T apn[] = "internet";  
+  NwU32T ip_addr = inet_ntoa("127.0.0.4");
 
   rc = nwGtpv2cMsgNew( thiz->hGtpv2cStackSgwS5,
       NW_TRUE,                                          /* TIED present*/
@@ -86,9 +88,8 @@ sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, /*NwGtpv2cUlpTrxnHandleT h
   rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_SERVING_NETWORK, 3, 0, service_network);
   NW_ASSERT( NW_OK == rc );
 
-  // NW_GTPV2C_IFTYPE_S4_SGSN_GTPC = 17
   // TODO: IPv4
-  rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg), NW_GTPV2C_IE_INSTANCE_ZERO, 17, (NwU32T)mmctx, thiz->s5s8cTunnel.fteidSgw.ipv4Addr, NULL);
+  rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg), NW_GTPV2C_IE_INSTANCE_ZERO, NW_GTPV2C_IFTYPE_S4_SGSN_GTPC, (NwU32T)mmctx, ip_addr, NULL);
   NW_ASSERT( NW_OK == rc );
 
   rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_SELECTION_MODE, 0, 0x02);
@@ -106,11 +107,12 @@ sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, /*NwGtpv2cUlpTrxnHandleT h
   rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_PAA, sizeof(paa), 0, (NwU8T*)&paa);
   NW_ASSERT( NW_OK == rc );
 
-  //// potade sme sa dotrepali
-  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_APN, thiz->apn.l, NW_GTPV2C_IE_INSTANCE_ZERO, thiz->apn.v);
+  // TODO: APN detect
+  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_APN, strlen(apn), NW_GTPV2C_IE_INSTANCE_ZERO, apn);
   NW_ASSERT( NW_OK == rc );
 
-  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_APN_RESTRICTION, 0, thiz->apnRes);
+  //// NO APN RESTRICTION
+  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_APN_RESTRICTION, 0, 0);
   NW_ASSERT( NW_OK == rc );
 
   rc = nwGtpv2cMsgGroupedIeStart((ulpReq.hMsg), NW_GTPV2C_IE_BEARER_CONTEXT, 0);
@@ -119,12 +121,12 @@ sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, /*NwGtpv2cUlpTrxnHandleT h
   rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_EBI, NW_GTPV2C_IE_INSTANCE_ZERO, 5);
   NW_ASSERT( NW_OK == rc );
 
-  NW_ASSERT( thiz->epsBearer[5].s5s8uTunnel.fteidSgw.ipv4Addr != 0); //AMIT
+  // TODO: IPv4 NwU32T
   rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg),
       NW_GTPV2C_IE_INSTANCE_TWO,
-      NW_GTPV2C_IFTYPE_S5S8_SGW_GTPU,
+      NW_GTPV2C_IFTYPE_S4_SGSN_GTPU,
       ((NwU32T)(thiz->epsBearer[5].s5s8uTunnel.fteidSgw.teidOrGreKey)),
-      ((NwU32T)(thiz->epsBearer[5].s5s8uTunnel.fteidSgw.ipv4Addr)),
+      ip_addr,
       NULL);
   NW_ASSERT( NW_OK == rc );
 
@@ -174,8 +176,7 @@ sgsn_s4_send_create_session_request(NwSaeGwUeT* thiz, /*NwGtpv2cUlpTrxnHandleT h
 
   thiz->s5s8cTunnel.hSgwLocalTunnel = ulpReq.apiInfo.initialReqInfo.hTunnel;
 
-  // TUKABEL TODO: log
-  //NW_UE_LOG(NW_LOG_LEVEL_INFO, "Create Session Request sent to PGW "NW_IPV4_ADDR"!", NW_IPV4_ADDR_FORMAT(ulpReq.apiInfo.initialReqInfo.peerIp));
+  LOGMMCTXP(LOGL_INFO, mmctx, "-> CREATE SESSION REQ: IMSI=%s <TUKABEL>\n", mmctx->imsi);
 
   return rc;
 }
