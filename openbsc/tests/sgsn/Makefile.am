@@ -28,6 +28,10 @@ sgsn_test_LDADD = \
 	$(top_builddir)/src/gprs/gprs_subscriber.o \
 	$(top_builddir)/src/gprs/gsm_04_08_gprs.o \
 	$(top_builddir)/src/gprs/sgsn_s4.o \
+	$(top_builddir)/src/gprs/NwMinyLogMgrEntity.o \
+	$(top_builddir)/src/gprs/NwMinyTmrMgrEntity.o \
+	$(top_builddir)/src/gprs/NwMinyUlpMgrEntity.o \
+	$(top_builddir)/src/gprs/NwMinyUdpMgrEntity.o \
 		$(top_builddir)/src/libcommon/libcommon.a \
 	$(LIBOSMOABIS_LIBS) \
 	$(LIBOSMOCORE_LIBS) \

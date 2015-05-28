@@ -57,6 +57,7 @@
 #include <gtp.h>
 
 #include <mylib/NwGtpv2c.h>
+#include <sgsn_s4.h>
 
 #include "../../bscconfig.h"
 
@@ -295,7 +296,8 @@ int main(int argc, char **argv)
 	int rc;
 
         //TUKABEL ODJEBAŤ
-        //nwGtpv2cInitialize( NULL );
+        S4Initialize( "127.0.0.1", "127.0.0.1" );
+        
         
 	tall_bsc_ctx = talloc_named_const(NULL, 0, "osmo_sgsn");
 	tall_msgb_ctx = talloc_named_const(tall_bsc_ctx, 0, "msgb");
