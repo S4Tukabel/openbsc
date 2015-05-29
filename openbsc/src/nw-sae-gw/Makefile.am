@@ -2,7 +2,7 @@
 
 
 # path to nwEpc
-nwEpc_PATH = ../../../../nwEPC
+nwEpc_PATH = ./../../../../nwEPC
 
 # nwEpc makefile
 SUBDIRS = $(nwEpc_PATH)
@@ -10,9 +10,10 @@ SUBDIRS = $(nwEpc_PATH)
 #AM_CFLAGS = -DNW_LOG_TO_FILE -Wall -I$(nwEpc_PATH)/nw-gtpv2c/shared -I$(nwEpc_PATH)/nw-gtpv1u/shared -I$(nwEpc_PATH)/nw-sdp/shared -I$(nwEpc_PATH)/common -I$(nwEpc_PATH)/include -I$(nwEpc_PATH)/utils/nw-ipv4-if -I$(nwEpc_PATH)/utils/nw-gtpv2c-if -I$(nwEpc_PATH)/utils/nw-gtpu-if  -I$(nwEpc_PATH)/utils/nw-log -I$(nwEpc_PATH)/utils/nw-tmr -I$(nwEpc_PATH)/utils/nw-ippool -I$(nwEpc_PATH)/nw-event/include @AM_CFLAGS@
 
 # additional include paths necessary to compile the C++ programs
-AM_CFLAGS = -DNW_LOG_TO_FILE -Wall -I/usr/local/include -I/usr/local/include/mylib\
+AM_CFLAGS = \
+	-DNW_LOG_TO_FILE -Wall -I/usr/local/include -I/usr/local/include/mylib\
 	-I$(nwEpc_PATH)/common -I$(nwEpc_PATH)/nw-event/include -I$(nwEpc_PATH)/utils/nw-gtpv2c-if\
-	-I$(nwEpc_PATH)/utils/nw-gtpu-if\
+	-I$(nwEpc_PATH)/utils/nw-gtpu-if -I$(nwEpc_PATH)/utils/nw-tmr\
 	-I$(nwEpc_PATH)/utils/nw-ippool -I$(nwEpc_PATH)/utils/nw-log\
 	-I$(nwEpc_PATH)/nw-sdp/shared\
 	@AM_CFLAGS@
@@ -107,7 +108,7 @@ nwSaeGwTest_SOURCES =   \
 # the additional libraries needed to link nwWimaxBsEmu 
 #nwLteSaeGw_LDADD =  $(top_builddir)/nw-gtpv2c/src/libNwGtpv2c.a $(top_builddir)/nw-sdp/src/libNwSdp.a $(top_builddir)/nw-gtpv1u/src/libNwGtpv1u.a $(top_builddir)/nw-gre/src/libNwGre.a  $(top_builddir)/nw-ipv4/src/libNwIpv4.a $(top_builddir)/nw-event/src/libNwEvent.a  $(AM_LDFLAGS)
 
-nwSaeGwTest_LDADD = -lstdc++ -lNwGtpv2c -lNwSdp -lNwGtpv1u -lNwGre -lNwIpv4 -lNwEvent $(AM_LDFLAGS)
+nwSaeGwTest_LDADD = -lstdc++ -lNwGtpv2c -lNwSdp -lNwGtpv1u -lNwGre -lNwIpv4 -lNwEvent NwSaeGwUlp.o $(AM_LDFLAGS)
 
 #nwLteSaeGw_LDADD = libNwGtpv2c.a libNwSdp.a libNwGtpv1u.a libNwGre.a libNwIpv4.a libNwEvent.a $(AM_LDFLAGS)
 
