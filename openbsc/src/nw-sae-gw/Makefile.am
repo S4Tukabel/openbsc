@@ -15,7 +15,7 @@ AM_CFLAGS = \
 	-I$(nwEpc_PATH)/common -I$(nwEpc_PATH)/nw-event/include -I$(nwEpc_PATH)/utils/nw-gtpv2c-if\
 	-I$(nwEpc_PATH)/utils/nw-gtpu-if -I$(nwEpc_PATH)/utils/nw-tmr\
 	-I$(nwEpc_PATH)/utils/nw-ippool -I$(nwEpc_PATH)/utils/nw-log\
-	-I$(nwEpc_PATH)/nw-sdp/shared\
+	-I$(nwEpc_PATH)/utils/nw-ipv4-if -I$(nwEpc_PATH)/nw-sdp/shared\
 	@AM_CFLAGS@
 
 #-I$(top_srcdir)/nw-gtpv2c/shared -I$(top_srcdir)/nw-gtpv1u/shared -I$(top_srcdir)/nw-sdp/shared -I$(top_srcdir)/common -I$(top_srcdir)/include -I$(top_srcdir)/utils/nw-ipv4-if -I$(top_srcdir)/utils/nw-gtpv2c-if -I$(top_srcdir)/utils/nw-gtpu-if  -I$(top_srcdir)/utils/nw-log -I$(top_srcdir)/utils/nw-tmr -I$(top_srcdir)/utils/nw-ippool -I$(top_srcdir)/nw-event/include
@@ -90,6 +90,26 @@ nwSaeGwTest_SOURCES =   \
                         NwLogMgr.h\
                         NwSaeGwUe.c
 
+# posledne 2 riadky - pokus
+o_files =		NwSaeGwUlp.o\
+			NwSaeGwDpe.o\
+                        NwSaeGwUeFsm.o\
+                        NwSaeGwUeState.o\
+                        NwSaeGwUeStateInit.o\
+                        NwSaeGwUeStateSaeSessionCreated.o\
+                        NwSaeGwUeStateSgwSessionCreated.o\
+                        NwSaeGwUeStatePgwSessionCreated.o\
+                        NwSaeGwUeStateSaeSessionEstablished.o\
+                        NwSaeGwUeStateSgwSessionEstablished.o\
+                        NwSaeGwUeStateAwaitPgwCreateSessionRsp.o\
+                        NwSaeGwUeStateAwaitPgwDeleteSessionRsp.o\
+                        NwSaeGwUeStateAwaitPgwModifyBearerRsp.o\
+                        NwSaeGwUeStateAwaitPgwModifyBearerRsp2.o\
+                        NwSaeGwUe.o \
+			-L $(nwEpc_PATH)/common/\
+			NwMem.o
+
+
 # NwGtpv2c.h  first bla bla bla
 
 #                        ../nw-gtpv2c/shared/NwGtpv2c.h\
@@ -108,7 +128,9 @@ nwSaeGwTest_SOURCES =   \
 # the additional libraries needed to link nwWimaxBsEmu 
 #nwLteSaeGw_LDADD =  $(top_builddir)/nw-gtpv2c/src/libNwGtpv2c.a $(top_builddir)/nw-sdp/src/libNwSdp.a $(top_builddir)/nw-gtpv1u/src/libNwGtpv1u.a $(top_builddir)/nw-gre/src/libNwGre.a  $(top_builddir)/nw-ipv4/src/libNwIpv4.a $(top_builddir)/nw-event/src/libNwEvent.a  $(AM_LDFLAGS)
 
-nwSaeGwTest_LDADD = -lstdc++ -lNwGtpv2c -lNwSdp -lNwGtpv1u -lNwGre -lNwIpv4 -lNwEvent NwSaeGwUlp.o $(AM_LDFLAGS)
+
+# bkp: -lstdc++ 
+nwSaeGwTest_LDADD = -lNwSdp -lNwGre -lNwIpv4 -lNwEvent -lNwGtpv2c -lNwGtpv1u $(o_files) $(AM_LDFLAGS)
 
 #nwLteSaeGw_LDADD = libNwGtpv2c.a libNwSdp.a libNwGtpv1u.a libNwGre.a libNwIpv4.a libNwEvent.a $(AM_LDFLAGS)
 
