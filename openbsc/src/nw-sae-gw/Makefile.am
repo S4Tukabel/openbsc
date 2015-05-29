@@ -7,22 +7,24 @@ nwEpc_PATH = ../../../../nwEPC
 # nwEpc makefile
 SUBDIRS = $(nwEpc_PATH)
 
+AM_CFLAGS = -DNW_LOG_TO_FILE -Wall -I$(nwEpc_PATH)/nw-gtpv2c/shared -I$(nwEpc_PATH)/nw-gtpv1u/shared -I$(nwEpc_PATH)/nw-sdp/shared -I$(nwEpc_PATH)/common -I$(nwEpc_PATH)/include -I$(nwEpc_PATH)/utils/nw-ipv4-if -I$(nwEpc_PATH)/utils/nw-gtpv2c-if -I$(nwEpc_PATH)/utils/nw-gtpu-if  -I$(nwEpc_PATH)/utils/nw-log -I$(nwEpc_PATH)/utils/nw-tmr -I$(nwEpc_PATH)/utils/nw-ippool -I$(nwEpc_PATH)/nw-event/include @AM_CFLAGS@
 
 # additional include paths necessary to compile the C++ programs
-AM_CFLAGS = -DNW_LOG_TO_FILE -Wall -I/usr/local/include/ -I/usr/local/include/mylib/ \
-	-I$(nwEpc_PATH)/common/ -I$(nwEpc_PATH)/nw-event/include/ -I$(nwEpc_PATH)/utils/nw-gtpv2c-if/ \
-	-I$(nwEpc_PATH)/utils/nw-gtpv2c-if/ -I$(nwEpc_PATH)/utils/nw-gtpu-if/  \
-	-I$(nwEpc_PATH)/utils/nw-ippool/ -I$(nwEpc_PATH)/utils/nw-log/ \
-	-I$(nwEpc_PATH)/nw-sdp/shared/ \
-	@AM_CFLAGS@
+#AM_CFLAGS = -DNW_LOG_TO_FILE -Wall -I/usr/local/include -I/usr/local/include/mylib\
+#	-I$(nwEpc_PATH)/common -I$(nwEpc_PATH)/nw-event/include -I$(nwEpc_PATH)/utils/nw-gtpv2c-if\
+#	-I$(nwEpc_PATH)/utils/nw-gtpu-if\
+#	-I$(nwEpc_PATH)/utils/nw-ippool -I$(nwEpc_PATH)/utils/nw-log\
+#	-I$(nwEpc_PATH)/nw-sdp/shared\
+#	@AM_CFLAGS@
 
 #-I$(top_srcdir)/nw-gtpv2c/shared -I$(top_srcdir)/nw-gtpv1u/shared -I$(top_srcdir)/nw-sdp/shared -I$(top_srcdir)/common -I$(top_srcdir)/include -I$(top_srcdir)/utils/nw-ipv4-if -I$(top_srcdir)/utils/nw-gtpv2c-if -I$(top_srcdir)/utils/nw-gtpu-if  -I$(top_srcdir)/utils/nw-log -I$(top_srcdir)/utils/nw-tmr -I$(top_srcdir)/utils/nw-ippool -I$(top_srcdir)/nw-event/include
 
-bin_PROGRAMS = nwLteSaeGw
+bin_PROGRAMS = nwSaeGwTest
 
 
 # list of sources for the 'NwWimaxBsEmu' binary
-nwLteSaeGw_SOURCES =    \
+nwSaeGwTest_SOURCES =   \
+                        NwSaeGwTest.c\
                         $(nwEpc_PATH)/common/tree.h\
                         $(nwEpc_PATH)/common/NwMem.h\
                         $(nwEpc_PATH)/common/NwEvt.h\
@@ -74,8 +76,20 @@ nwLteSaeGw_SOURCES =    \
                         NwSaeGwUeStateAwaitPgwDeleteSessionRsp.c\
                         NwSaeGwUeStateAwaitPgwModifyBearerRsp.c\
                         NwSaeGwUeStateAwaitPgwModifyBearerRsp2.c\
-                        NwSaeGwMain.c\
+			NwGtpv2c.h
+			NwGtpv2cIe.h\
+                        NwGtpv2cMsg.h\
+                        NwGtpv2cMsgParser.h\
+                        NwGtpv1u.h\
+                        queue.h\
+                        NwTypes.h\
+                        NwError.h\
+                        NwLog.h\
+                        NwUtils.h\
+                        NwLogMgr.h\
                         NwSaeGwUe.c
+
+# NwGtpv2c.h  first bla bla bla
 
 #                        ../nw-gtpv2c/shared/NwGtpv2c.h\
 #                        ../nw-gtpv2c/shared/NwGtpv2cIe.h\
@@ -93,7 +107,7 @@ nwLteSaeGw_SOURCES =    \
 # the additional libraries needed to link nwWimaxBsEmu 
 #nwLteSaeGw_LDADD =  $(top_builddir)/nw-gtpv2c/src/libNwGtpv2c.a $(top_builddir)/nw-sdp/src/libNwSdp.a $(top_builddir)/nw-gtpv1u/src/libNwGtpv1u.a $(top_builddir)/nw-gre/src/libNwGre.a  $(top_builddir)/nw-ipv4/src/libNwIpv4.a $(top_builddir)/nw-event/src/libNwEvent.a  $(AM_LDFLAGS)
 
-nwLteSaeGw_LDADD = -lNwGtpv2c -lNwSdp -lNwGtpv1u -lNwGre -lNwIpv4 -lNwEvent $(AM_LDFLAGS)
+nwSaeGwTest_LDADD = -lstdc++ -lNwGtpv2c -lNwSdp -lNwGtpv1u -lNwGre -lNwIpv4 -lNwEvent $(AM_LDFLAGS)
 
 #nwLteSaeGw_LDADD = libNwGtpv2c.a libNwSdp.a libNwGtpv1u.a libNwGre.a libNwIpv4.a libNwEvent.a $(AM_LDFLAGS)
 
