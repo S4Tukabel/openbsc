@@ -73,8 +73,8 @@ static void imsi_str2arr(char *str, NwU8T *imsi)
 	}
 }
 
-NwRcT
-sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT hTrxn, */ struct sgsn_mm_ctx *mmctx) 
+/* TS 29.274 v10.9.0 section 7.2.1: Create Session Request */
+NwRcT sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT hTrxn, */ struct sgsn_mm_ctx *mmctx) 
 {
   NwRcT rc;
   NwGtpv2cUlpApiT       ulpReq;
@@ -112,13 +112,15 @@ sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT h
   rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_RAT_TYPE, 0, 2);
   NW_ASSERT( NW_OK == rc );
 
-  /* Service NW = MCC + MNC (part of imsi)*/
+  /* Serving Netwrok = MCC + MNC (part of imsi)*/
   memcpy(service_network, imsi, 3);
   service_network[2] = (service_network[2] << 4) | (service_network[1] >> 4);
   service_network[1] |= 0xf0;
   rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_SERVING_NETWORK, 3, 0, service_network);
   NW_ASSERT( NW_OK == rc );
 
+  /* Sender F-TEID for Control Plane */
+  /* NW_GTPV2C_IFTYPE_S4_SGSN_GTPC (17)*/
   // TODO: IPv4
   rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg), NW_GTPV2C_IE_INSTANCE_ZERO, NW_GTPV2C_IFTYPE_S4_SGSN_GTPC, (NwU32T)mmctx, htonl(ip_addr_sgsn), NULL);
   NW_ASSERT( NW_OK == rc );
@@ -130,11 +132,7 @@ sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT h
   NW_ASSERT( NW_OK == rc );
 
   /* TS 29.274 v10.9.0 section 7.2.1: */
-  /* If static IP address assignment is not used, and for */
-  /* scenarios other than a Handover to Untrusted Non-3GPP */
-  /* IP Access with GTP on S2b, the IPv4 address shall be set */
-  /* to 0.0.0.0, and/or the IPv6 Prefix Length and IPv6 prefix */
-  /* and Interface Identifier shall all be set to zero. */
+  /* If static IP address assignment the IPv4 address shall be set to 0.0.0.0 */
   paa.pdnType = NW_PDN_TYPE_IPv4;
   paa.ipv4Addr[0] = 0x00;
   paa.ipv4Addr[1] = 0x00;
@@ -147,63 +145,60 @@ sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT h
   rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_APN, strlen(apn), NW_GTPV2C_IE_INSTANCE_ZERO, apn);
   NW_ASSERT( NW_OK == rc );
 
-  // NO APN RESTRICTION
+  /* No APN restriction */
   rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_APN_RESTRICTION, 0, 0);
   NW_ASSERT( NW_OK == rc );
 
+  /* Bearer Contexts to be created - start of grouped IE  */
   rc = nwGtpv2cMsgGroupedIeStart((ulpReq.hMsg), NW_GTPV2C_IE_BEARER_CONTEXT, 0);
   NW_ASSERT( NW_OK == rc );
 
-  /* 5 - default first non reserved bearer */
-  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_EBI, NW_GTPV2C_IE_INSTANCE_ZERO, 5);
-  NW_ASSERT( NW_OK == rc );
+    /* EBI = 5 - first non reserved bearer for default bearer */
+    rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_EBI, NW_GTPV2C_IE_INSTANCE_ZERO, 5);
+    NW_ASSERT( NW_OK == rc );
 
-  // TODO: TEID (bulgarian constant now)
-  rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg),
-      NW_GTPV2C_IE_INSTANCE_TWO,
-      NW_GTPV2C_IFTYPE_S4_SGSN_GTPU,
-      ((NwU32T)(3)),
-      htonl(ip_addr_sgsn),
-      NULL);
-  NW_ASSERT( NW_OK == rc );
+    /* S4-U SGSN F-TEID */
+    // TODO: TEID (bulgarian constant now)
+    rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg),
+        NW_GTPV2C_IE_INSTANCE_TWO,
+        NW_GTPV2C_IFTYPE_S4_SGSN_GTPU,
+        ((NwU32T)(3)),
+        htonl(ip_addr_sgsn),
+        NULL);
+    NW_ASSERT( NW_OK == rc );
 
- 
-// pragma replaced with _attribute((packed))
-//#pragma pack(1)
-  struct __attribute__((packed)){
-    NwU8T arp;
-    NwU8T labelQci;
-    NwU8T maximumBitRateUplink[5];
-    NwU8T maximumBitRateDownlink[5];
-    NwU8T  guaranteedBitRateUplink[5];
-    NwU8T  guaranteedBitRateDownlink[5];
-  } bearerQos;
-//#pragma pack()
+  // pragma replaced with _attribute((packed))
+  //#pragma pack(1)
+    struct __attribute__((packed)){
+      NwU8T arp;
+      NwU8T labelQci;
+      NwU8T maximumBitRateUplink[5];
+      NwU8T maximumBitRateDownlink[5];
+      NwU8T  guaranteedBitRateUplink[5];
+      NwU8T  guaranteedBitRateDownlink[5];
+    } bearerQos;
+  //#pragma pack()
 
-  bearerQos.arp                         = 0x01;
-  bearerQos.labelQci                    = 0x01;
+    bearerQos.arp                         = 0x01;
+    bearerQos.labelQci                    = 0x01;
 
-  memset(bearerQos.maximumBitRateUplink, 0x00,5);
-  memset(bearerQos.maximumBitRateDownlink, 0x00,5);
-  memset(bearerQos.guaranteedBitRateUplink, 0x00,5);
-  memset(bearerQos.guaranteedBitRateDownlink, 0x00,5);
+    memset(bearerQos.maximumBitRateUplink, 0x00,5);
+    memset(bearerQos.maximumBitRateDownlink, 0x00,5);
+    memset(bearerQos.guaranteedBitRateUplink, 0x00,5);
+    memset(bearerQos.guaranteedBitRateDownlink, 0x00,5);
 
+    rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_BEARER_LEVEL_QOS, sizeof(bearerQos), 0, (NwU8T*)&bearerQos);
+    NW_ASSERT( NW_OK == rc );
 
-  rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_BEARER_LEVEL_QOS, sizeof(bearerQos), 0, (NwU8T*)&bearerQos);
-  NW_ASSERT( NW_OK == rc );
-
-
-  rc = nwGtpv2cMsgGroupedIeEnd((ulpReq.hMsg));
-  NW_ASSERT( NW_OK == rc );
+    rc = nwGtpv2cMsgGroupedIeEnd((ulpReq.hMsg));
+    NW_ASSERT( NW_OK == rc );
 
   /* End - Encoding of grouped IE "bearer context created" */
 
-  /* Send Create Session Request to PGW */
-
+  /* Send Create Session Request to SGW */
   ulpReq.apiType = (NW_GTPV2C_ULP_API_INITIAL_REQ | NW_GTPV2C_ULP_API_FLAG_CREATE_LOCAL_TUNNEL);
-
   ulpReq.apiInfo.initialReqInfo.hTunnel         = 0;                       
-  ulpReq.apiInfo.initialReqInfo.hUlpTrxn        = 0; ///tukabel zero/// hTrxn;                        /* Save the trxn for Response */
+  ulpReq.apiInfo.initialReqInfo.hUlpTrxn        = 0; //tukabel zero/// hTrxn;                        /* Save the trxn for Response */
   ulpReq.apiInfo.initialReqInfo.hUlpTunnel      = (NwGtpv2cUlpTrxnHandleT)mmctx;
   ulpReq.apiInfo.initialReqInfo.teidLocal       = (NwGtpv2cUlpTrxnHandleT)mmctx;
   ulpReq.apiInfo.initialReqInfo.peerIp          = htonl(ip_addr_sgw);
