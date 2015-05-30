@@ -297,7 +297,7 @@ int main(int argc, char **argv)
 	int rc;
 
         //TUKABEL ODJEBAŤ
-        S4Initialize( "127.0.0.1", "127.0.0.1" );
+        S4Initialize( "127.0.4.4", "127.0.1.4" );
         
         
 	tall_bsc_ctx = talloc_named_const(NULL, 0, "osmo_sgsn");

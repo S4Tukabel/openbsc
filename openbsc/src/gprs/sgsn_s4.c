@@ -65,9 +65,9 @@ static void imsi_str2arr(char *str, NwU8T *imsi)
 		else
 			val = 0xf;
                 if (n + 1 < imsi_len)
-                    val = (val << 4) | ((str[n + 1]-'0') & 0xf);
+                    val = val | (((str[n + 1]-'0') & 0xf) << 4);
                 else
-                    val = (val << 4) | 0xf;
+                    val = val | (0xf << 4);
                 
                 imsi[n / 2] = val;
 	}
@@ -114,7 +114,8 @@ sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT h
 
   /* Service NW = MCC + MNC (part of imsi)*/
   memcpy(service_network, imsi, 3);
-  service_network[2] |= 0xf0;
+  service_network[2] = (service_network[2] << 4) | (service_network[1] >> 4);
+  service_network[1] |= 0xf0;
   rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_SERVING_NETWORK, 3, 0, service_network);
   NW_ASSERT( NW_OK == rc );
 
