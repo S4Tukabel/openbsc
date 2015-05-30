@@ -108,8 +108,8 @@ sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT h
   rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_MEI, 8, 0, mei);
   NW_ASSERT( NW_OK == rc );
 
-  /* 2 = GAN*/
-  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_RAT_TYPE, 0, 4);
+  /* 2 = GERAN*/
+  rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_RAT_TYPE, 0, 2);
   NW_ASSERT( NW_OK == rc );
 
   /* Service NW = MCC + MNC (part of imsi)*/
@@ -120,7 +120,7 @@ sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT h
   NW_ASSERT( NW_OK == rc );
 
   // TODO: IPv4
-  rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg), NW_GTPV2C_IE_INSTANCE_ZERO, NW_GTPV2C_IFTYPE_S4_SGSN_GTPC, (NwU32T)mmctx, ip_addr_sgsn, NULL);
+  rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg), NW_GTPV2C_IE_INSTANCE_ZERO, NW_GTPV2C_IFTYPE_S4_SGSN_GTPC, (NwU32T)mmctx, htonl(ip_addr_sgsn), NULL);
   NW_ASSERT( NW_OK == rc );
 
   rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_SELECTION_MODE, 0, 0x02);
@@ -129,8 +129,13 @@ sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT h
   rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_PDN_TYPE, 0, NW_PDN_TYPE_IPv4);
   NW_ASSERT( NW_OK == rc );
 
+  /* TS 29.274 v10.9.0 section 7.2.1: */
+  /* If static IP address assignment is not used, and for */
+  /* scenarios other than a Handover to Untrusted Non-3GPP */
+  /* IP Access with GTP on S2b, the IPv4 address shall be set */
+  /* to 0.0.0.0, and/or the IPv6 Prefix Length and IPv6 prefix */
+  /* and Interface Identifier shall all be set to zero. */
   paa.pdnType = NW_PDN_TYPE_IPv4;
-  // TODO: ipv4Addr
   paa.ipv4Addr[0] = 0x00;
   paa.ipv4Addr[1] = 0x00;
   paa.ipv4Addr[2] = 0x00;
@@ -142,22 +147,23 @@ sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHandleT h
   rc = nwGtpv2cMsgAddIe((ulpReq.hMsg), NW_GTPV2C_IE_APN, strlen(apn), NW_GTPV2C_IE_INSTANCE_ZERO, apn);
   NW_ASSERT( NW_OK == rc );
 
-  //// NO APN RESTRICTION
+  // NO APN RESTRICTION
   rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_APN_RESTRICTION, 0, 0);
   NW_ASSERT( NW_OK == rc );
 
   rc = nwGtpv2cMsgGroupedIeStart((ulpReq.hMsg), NW_GTPV2C_IE_BEARER_CONTEXT, 0);
   NW_ASSERT( NW_OK == rc );
 
+  /* 5 - default first non reserved bearer */
   rc = nwGtpv2cMsgAddIeTV1((ulpReq.hMsg), NW_GTPV2C_IE_EBI, NW_GTPV2C_IE_INSTANCE_ZERO, 5);
   NW_ASSERT( NW_OK == rc );
 
-  // TODO: IPv4 NwU32T
+  // TODO: TEID (bulgarian constant now)
   rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg),
       NW_GTPV2C_IE_INSTANCE_TWO,
       NW_GTPV2C_IFTYPE_S4_SGSN_GTPU,
       ((NwU32T)(3)),
-      ip_addr_sgsn,
+      htonl(ip_addr_sgsn),
       NULL);
   NW_ASSERT( NW_OK == rc );
 
