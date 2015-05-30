@@ -1857,7 +1857,7 @@ static int gsm0408_rcv_gsm(struct sgsn_mm_ctx *mmctx, struct msgb *msg,
             
             switch (gh->msg_type) {
             case GSM48_MT_GSM_ACT_PDP_REQ:
-                    //tukabel rc = sgsn_s4_send_create_session_request(mmctx);
+                    rc = sgsn_s4_send_create_session_request(mmctx);
                     //
                     rc = gsm48_rx_gsm_act_pdp_req(mmctx, msg);
                     break;

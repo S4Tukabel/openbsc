@@ -139,6 +139,7 @@ static void signal_handler(int signal)
 	switch (signal) {
 	case SIGINT:
 		osmo_signal_dispatch(SS_L_GLOBAL, S_L_GLOBAL_SHUTDOWN, NULL);
+                S4Finalize();
 		sleep(1);
 		exit(0);
 		break;
