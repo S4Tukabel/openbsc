@@ -88,3 +88,6 @@ tests/testsuite.log
 src/openbsc.cfg*
 
 nbproject/*
+
+# nwEPC subdir (should be another repository)
+nwEPC/

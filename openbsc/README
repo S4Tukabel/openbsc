@@ -1,3 +1,11 @@
+S4 Tukabel
+==========
+
+nwEPC must be cloned in directory openbsc's root directory so ../nwEPC will
+contain the whole nwEPC. Branch superkabel must be used if not merged to master.
+git@github.com:S4Tukabel/nwEPC.git
+https://github.com/S4Tukabel/nwEPC.git
+
 About OpenBSC
 =============
 

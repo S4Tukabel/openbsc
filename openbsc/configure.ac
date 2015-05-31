@@ -3,6 +3,10 @@ AC_INIT([openbsc],
 	m4_esyscmd([./git-version-gen .tarball-version]),
 	[openbsc@lists.osmocom.org])
 
+# check for nwEPC
+AC_CONFIG_SRCDIR([../../nwEPC/nw-mme-emu/NwMmeMain.c])
+AC_CONFIG_SRCDIR([../../nwEPC/nw-sae-gw/NwSaeGwMain.c])
+
 AM_INIT_AUTOMAKE([dist-bzip2])
 AC_CONFIG_TESTDIR(tests)
 
@@ -14,6 +18,12 @@ AC_PROG_MAKE_SET
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_RANLIB
+
+# nwEPC
+AC_PROG_CXXCPP
+AC_PROG_CXX
+AM_PROG_CC_C_O
+
 
 dnl checks for libraries
 AC_SEARCH_LIBS(crypt, crypt,
@@ -166,8 +176,86 @@ AC_MSG_CHECKING([whether to enable VTY/CTRL tests])
 AC_MSG_RESULT([$enable_ext_tests])
 AM_CONDITIONAL(ENABLE_EXT_TESTS, test "x$enable_ext_tests" = "xyes")
 
+# nwEPC
+# distribute additional compiler and linker flags
+# --> set these variables instead of CXXFLAGS or LDFLAGS
+AC_SUBST([AM_CFLAGS])
+AC_SUBST([AM_LDFLAGS])
+
 dnl Generate the output
 AM_CONFIG_HEADER(bscconfig.h)
+
+# this is example-file: configure.ac
+
+# initial information about the project
+AC_INIT([NwEpc],[0.16],[beta])
+
+# check if the source folder is correct
+AC_CONFIG_SRCDIR([../../nwEPC/nw-mme-emu/NwMmeMain.c])
+AC_CONFIG_SRCDIR([../../nwEPC/nw-sae-gw/NwSaeGwMain.c])
+
+# Checks for programs
+
+# check for C++ preprocessor and compiler and the library compiler
+AC_PROG_CXXCPP
+AC_PROG_CXX
+AC_PROG_RANLIB
+
+# automake initialisation and check for minimal automake API version 1.9
+AM_INIT_AUTOMAKE([1.9])
+
+# use the C compiler for the following checks
+AC_LANG([C])
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([string])
+AC_CHECK_HEADERS([iostream])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_TYPE_SIZE_T
+
+# distribute additional compiler and linker flags
+# --> set these variables instead of CXXFLAGS or LDFLAGS
+AC_SUBST([AM_CFLAGS])
+AC_SUBST([AM_LDFLAGS])
+
+
+# Change top dirs for nwEPC to allow inclusion trough SUBDIRS variable
+AC_SUBST([nwepc_top_srcdir], $top_srcdir/nwEPC)
+AC_SUBST([nwepc_top_builddir], $top_builddir/nwEPC)
+
+# nwEPC files to generate
+AC_CONFIG_FILES([$nwepc_top_builddir/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-event/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-event/src/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-event/test-app/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-ipv4/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-ipv4/src/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-ipv4/test-app/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-ipv4/test-app/nw-helloworld/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gre/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gre/src/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gre/test-app/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gre/test-app/nw-helloworld/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv1u/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv1u/src/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv1u/test-app/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv1u/test-app/nw-helloworld/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv2c/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv2c/src/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv2c/test-app/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv2c/test-app/nw-helloworld/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv2c/test-app/nw-egtping/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-sdp/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-sdp/src/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-sdp/test-app/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-sdp/test-app/nw-helloworld/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-mme-emu/Makefile])
+AC_CONFIG_FILES([$nwepc_top_builddir/nw-sae-gw/Makefile])
+
+# generate the final Makefile etc.
+#AC_OUTPUT
 
 AC_OUTPUT(
     openbsc.pc

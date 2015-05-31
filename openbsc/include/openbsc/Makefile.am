@@ -1,6 +1,6 @@
-nwepc_HEADERS = NwMiniLogMgrEntity.h NwMiniTmrMgrEntity.h \
-		NwMiniUdpEntity.h NwMiniUlpEntity.h \
-		NwEvt.h \
+#nwepc_HEADERS = NwMiniLogMgrEntity.h NwMiniTmrMgrEntity.h \
+#		NwMiniUdpEntity.h NwMiniUlpEntity.h \
+#		NwEvt.h
 		
 
 noinst_HEADERS = abis_nm.h abis_rsl.h db.h gsm_04_08.h gsm_data.h \
