@@ -4,8 +4,8 @@ AC_INIT([openbsc],
 	[openbsc@lists.osmocom.org])
 
 # check for nwEPC
-AC_CONFIG_SRCDIR([../../nwEPC/nw-mme-emu/NwMmeMain.c])
-AC_CONFIG_SRCDIR([../../nwEPC/nw-sae-gw/NwSaeGwMain.c])
+AC_CONFIG_SRCDIR([nwEPC/nw-mme-emu/NwMmeMain.c])
+AC_CONFIG_SRCDIR([nwEPC/nw-sae-gw/NwSaeGwMain.c])
 
 AM_INIT_AUTOMAKE([dist-bzip2])
 AC_CONFIG_TESTDIR(tests)
@@ -189,12 +189,6 @@ AM_CONFIG_HEADER(bscconfig.h)
 
 # initial information about the project
 AC_INIT([NwEpc],[0.16],[beta])
-
-# check if the source folder is correct
-AC_CONFIG_SRCDIR([../../nwEPC/nw-mme-emu/NwMmeMain.c])
-AC_CONFIG_SRCDIR([../../nwEPC/nw-sae-gw/NwSaeGwMain.c])
-
-# Checks for programs
 
 # check for C++ preprocessor and compiler and the library compiler
 AC_PROG_CXXCPP
