@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 #include <assert.h>
-#include "openbsc/NwEvt.h"
+#include "NwEvt.h"
 #include <mylib/NwTypes.h>
 #include <mylib/NwError.h>
 #include <mylib/NwLog.h>

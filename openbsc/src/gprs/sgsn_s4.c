@@ -7,7 +7,7 @@
 #include <mylib/NwLog.h>
 #include <mylib/NwGtpv2c.h>
 
-#include "openbsc/NwEvt.h"
+#include "NwEvt.h"
 #include "openbsc/NwMiniLogMgrEntity.h"
 #include "openbsc/NwMiniTmrMgrEntity.h"
 #include "openbsc/NwMiniUdpEntity.h"

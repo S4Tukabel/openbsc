@@ -1,15 +1,17 @@
 AUTOMAKE_OPTIONS = foreign dist-bzip2 1.6
 
 AM_CPPFLAGS = $(all_includes) -I$(top_srcdir)/include
-SUBDIRS =  doc include src tests\
-	    nw-event\
+
+# test subdir disabled
+SUBDIRS =   nw-event\
 	    nw-ipv4\
 	    nw-gre\
 	    nw-gtpv1u\
 	    nw-gtpv2c\
 	    nw-sdp\
 	    nw-mme-emu\
-	    nw-sae-gw
+	    nw-sae-gw\
+	    doc include src #tests
 	
 
 pkgconfigdir = $(libdir)/pkgconfig

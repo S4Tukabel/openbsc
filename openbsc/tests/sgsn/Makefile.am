@@ -1,5 +1,22 @@
+NWEPC_CFLAGS = -DNW_LOG_TO_FILE\
+	-I$(top_srcdir)/nw-gtpv2c/include\
+	-I$(top_srcdir)/nw-gtpv2c/shared\
+	-I$(top_srcdir)/nw-gtpv1u/include\
+	-I$(top_srcdir)/nw-gtpv1u/shared\
+	-I$(top_srcdir)/nw-sdp/shared\
+	-I$(top_srcdir)/common\
+	-I$(top_srcdir)/include\
+	-I$(top_srcdir)/utils/nw-ipv4-if\
+	-I$(top_srcdir)/utils/nw-gtpv2c-if\
+	-I$(top_srcdir)/utils/nw-gtpu-if\
+	-I$(top_srcdir)/utils/nw-log\
+	-I$(top_srcdir)/utils/nw-tmr\
+	-I$(top_srcdir)/utils/nw-ippool\
+	-I$(top_srcdir)/nw-event/include\
+	-I$(top_srcdir)/nw-sae-gw
+
 AM_CPPFLAGS = $(all_includes) -I$(top_srcdir)/include
-AM_CFLAGS=-Wall -ggdb3 $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGSM_CFLAGS)
+AM_CFLAGS=-Wall -ggdb3 $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGSM_CFLAGS) $(NWEPC_CFLAGS)
 
 EXTRA_DIST = sgsn_test.ok
 
@@ -33,6 +50,8 @@ sgsn_test_LDADD = \
 	$(top_builddir)/src/gprs/NwMiniUlpEntity.o \
 	$(top_builddir)/src/gprs/NwMiniUdpEntity.o \
 	$(top_builddir)/utils/nw-tmr/NwTmrMgr.o \
+	$(top_builddir)/nw-sae-gw/NwSaeGwDpe.o \
+	$(top_builddir)/nw-sae-gw/NwSaeGwUlp.o \
 	$(top_builddir)/src/libcommon/libcommon.a \
 	$(LIBOSMOABIS_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
@@ -42,4 +61,3 @@ sgsn_test_LDADD = \
 	-lNwGtpv2c \
 	-levent
 	-lgtp
-

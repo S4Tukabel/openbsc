@@ -15,7 +15,7 @@
 #include <string.h>
 #include <assert.h>
 #include <sys/time.h>
-#include "openbsc/NwEvt.h"
+#include "NwEvt.h"
 #include <mylib/NwGtpv2c.h>
 #include <mylib/NwGtpv2cIe.h>
 #include <mylib/NwGtpv2cMsg.h>

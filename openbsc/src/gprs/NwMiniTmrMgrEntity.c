@@ -13,7 +13,7 @@
 #define __WITH_LIBEVENT__
 #include <stdio.h>
 #include <assert.h>
-#include "openbsc/NwEvt.h"
+#include "NwEvt.h"
 #include <mylib/NwGtpv2c.h>
 #include "openbsc/NwMiniLogMgrEntity.h"
 #include "openbsc/NwMiniTmrMgrEntity.h"
