@@ -5,7 +5,6 @@
  * Created on May 27, 2015, 8:05 PM
  */
 
-    
 
 #ifndef SGSN_S4_H
 #define	SGSN_S4_H
