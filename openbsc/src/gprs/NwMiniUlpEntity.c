@@ -24,6 +24,9 @@
 #include "openbsc/NwMiniUlpEntity.h"
 #include "openbsc/sgsn_s4.h"
 
+// logging
+#include <openbsc/debug.h>
+
 #ifndef NW_ASSERT
 #define NW_ASSERT assert
 #endif 
@@ -187,12 +190,15 @@ nwGtpv2cUlpProcessStackReqCallback (NwGtpv2cUlpHandleT hUlp,
 
   thiz = (NwGtpv2cNodeUlpT*) hUlp;
 
+  LOGPC(DMM, LOGL_INFO, "TUKABEL LOGPC: Prijal som <> apitype= %d\n", pUlpApi->apiType);
   switch(pUlpApi->apiType)
   {
     case NW_GTPV2C_ULP_API_TRIGGERED_RSP_IND:
       {
         pPeer = (NwGtpv2cPeerT*)pUlpApi->apiInfo.triggeredRspIndInfo.hUlpTrxn;
         NW_LOG(NW_LOG_LEVEL_NOTI, "TUKABEL: Prijal som spravu" );
+        LOGPC(DMM, LOGL_INFO, "TUKABEL LOGPC: Prijal som spravu\n");
+        
         if(pUlpApi->apiInfo.triggeredRspIndInfo.msgType == NW_GTP_ECHO_RSP)
         {
           seqNum = nwGtpv2cMsgGetSeqNumber(pUlpApi->hMsg);
@@ -240,6 +246,7 @@ nwGtpv2cUlpProcessStackReqCallback (NwGtpv2cUlpHandleT hUlp,
               return NW_OK;
             }
             NW_LOG(NW_LOG_LEVEL_NOTI, "TUKABEL: Prijal som response" );
+            LOGPC(DMM, LOGL_INFO, "TUKABEL LOGPC: Prijal som response teid = %u\n", thiz->s4Tunnel.fteid.teidOrGreKey);
         }
       }
       break;
