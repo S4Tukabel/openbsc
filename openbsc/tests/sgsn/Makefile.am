@@ -32,7 +32,8 @@ sgsn_test_LDADD = \
 	$(top_builddir)/src/gprs/NwMiniTmrMgrEntity.o \
 	$(top_builddir)/src/gprs/NwMiniUlpEntity.o \
 	$(top_builddir)/src/gprs/NwMiniUdpEntity.o \
-		$(top_builddir)/src/libcommon/libcommon.a \
+	$(top_builddir)/utils/nw-tmr/NwTmrMgr.o \
+	$(top_builddir)/src/libcommon/libcommon.a \
 	$(LIBOSMOABIS_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(LIBOSMOGSM_LIBS) \

@@ -26,6 +26,70 @@
 #include <openbsc/sgsn_s4.h>
 #include <openbsc/debug.h>
 
+// superkabel includes
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+#include <fcntl.h>
+
+#include "NwEvt.h"
+#include "NwLog.h"
+#include "NwMem.h"
+#include "NwUtils.h"
+#include "NwSaeGwLog.h"
+#include "NwLogMgr.h"
+#include "NwGtpv2c.h"
+#include "NwSaeGwUe.h"
+#include "NwSaeGwUlp.h"
+#include "NwGtpv2cIf.h"
+#include "NwSaeGwDpe.h"
+
+
+
+//FROM nwMain
+typedef struct
+{
+  NwU8T                         isCombinedGw;
+  NwU8T                         apn[1024];
+  NwU32T                        ippoolSubnet;
+  NwU32T                        ippoolMask;
+  NwU32T                        numOfUe;
+  NwGtpv2cIfT                   udp;
+
+  struct {
+    NwU32T                      s11cIpv4Addr;
+    NwU32T                      s5cIpv4Addr;
+    NwU32T                      s4cIpv4Addr;
+    NwU32T                      s1uIpv4Addr;
+    NwSaeGwUlpT                 *pGw;
+  } sgwUlp;
+
+  struct {
+    NwU32T                      s5cIpv4Addr;
+    NwU32T                      s5uIpv4Addr;
+    NwSaeGwUlpT                 *pGw;
+  } pgwUlp;
+  
+  struct {
+    NwU32T                      s4cIpv4Addr;
+    NwU32T                      s4uIpv4Addr;
+    NwSaeGwUlpT                 *pGw;
+  } sgsnUlp;
+  
+  struct {
+    NwSaeGwDpeT                 *pDpe;           /*< Data Plane Entity   */
+    NwU32T                      gtpuIpv4Addr;
+    NwU8T                       sgiNwIfName[128];
+  } dataPlane;
+} NwSaeGwT;
+
+
+
 typedef struct NwGtpv2cPeerS
 {
   NwU32T ipv4Addr;
@@ -400,3 +464,76 @@ void S4Finalize() {
 //
 //  return rc;
 //}
+
+NwRcT
+nwSaeGwInitialize(NwSaeGwT* thiz)
+{
+  NwRcT rc = NW_OK;
+  NwSaeGwUlpT* pGw;
+  NwSaeGwUlpConfigT cfg;
+
+  /* Create Data Plane instance. */
+
+  thiz->dataPlane.pDpe    = nwSaeGwDpeInitialize();
+
+  /* Create SGW and PGW ULP instances. */
+  if(thiz->sgwUlp.s11cIpv4Addr)
+  {
+
+    NW_SAE_GW_LOG(NW_LOG_LEVEL_NOTI, "Creating SGW instance with S11 IPv4 address "NW_IPV4_ADDR, NW_IPV4_ADDR_FORMAT(htonl(thiz->sgwUlp.s11cIpv4Addr)));
+
+    cfg.maxUeSessions   = thiz->numOfUe;
+    cfg.ippoolSubnet    = thiz->ippoolSubnet;
+    cfg.ippoolMask      = thiz->ippoolMask;
+    cfg.s11cIpv4Addr    = thiz->sgwUlp.s11cIpv4Addr;
+    cfg.s5cIpv4AddrSgw  = thiz->sgwUlp.s5cIpv4Addr;
+    cfg.s4cIpv4AddrSgw  = thiz->sgwUlp.s4cIpv4Addr;
+    cfg.pDpe            = thiz->dataPlane.pDpe;
+
+    strncpy((char*)cfg.apn, (const char*)thiz->apn, 1023);
+
+    pGw = nwSaeGwUlpNew(); 
+    rc = nwSaeGwUlpInitialize(pGw, NW_SAE_GW_TYPE_SGW, &cfg);
+    NW_ASSERT( NW_OK == rc );
+    thiz->sgwUlp.pGw = pGw;
+  }
+
+  if(thiz->pgwUlp.s5cIpv4Addr)
+  {
+
+    NW_SAE_GW_LOG(NW_LOG_LEVEL_NOTI, "Creating PGW instance with S5 Ipv4 address "NW_IPV4_ADDR, NW_IPV4_ADDR_FORMAT(htonl(thiz->pgwUlp.s5cIpv4Addr)));
+
+    cfg.maxUeSessions   = thiz->numOfUe;
+    cfg.ippoolSubnet    = thiz->ippoolSubnet;
+    cfg.ippoolMask      = thiz->ippoolMask;
+    cfg.s5cIpv4AddrPgw  = thiz->pgwUlp.s5cIpv4Addr;
+    cfg.pDpe            = thiz->dataPlane.pDpe;
+
+    strncpy((char*)cfg.apn, (const char*)thiz->apn, 1023);
+
+    pGw = nwSaeGwUlpNew(); 
+    rc = nwSaeGwUlpInitialize(pGw, NW_SAE_GW_TYPE_PGW, &cfg);
+    NW_ASSERT( NW_OK == rc );
+    thiz->pgwUlp.pGw = pGw;
+  }
+
+  /* Register collocated PGW, if any */
+  if(thiz->isCombinedGw && 
+      (thiz->sgwUlp.pGw && thiz->pgwUlp.pGw))
+  {
+    rc = nwSaeGwUlpRegisterCollocatedPgw(thiz->sgwUlp.pGw, thiz->pgwUlp.pGw);
+    NW_ASSERT(NW_OK == rc);
+  }
+
+  if(thiz->dataPlane.gtpuIpv4Addr)
+  {
+    rc = nwSaeGwDpeCreateGtpuService(thiz->dataPlane.pDpe, thiz->dataPlane.gtpuIpv4Addr);
+  }
+
+  if(strlen((const char*)(thiz->dataPlane.sgiNwIfName)) != 0)
+  {
+    rc = nwSaeGwDpeCreateIpv4Service(thiz->dataPlane.pDpe, thiz->dataPlane.sgiNwIfName);
+  }
+ 
+  return rc;
+}
