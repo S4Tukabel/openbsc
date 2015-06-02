@@ -1,7 +1,16 @@
 AUTOMAKE_OPTIONS = foreign dist-bzip2 1.6
 
 AM_CPPFLAGS = $(all_includes) -I$(top_srcdir)/include
-SUBDIRS = doc include src tests $(nwepc_top_srcdir)
+SUBDIRS =  doc include src tests\
+	    nw-event\
+	    nw-ipv4\
+	    nw-gre\
+	    nw-gtpv1u\
+	    nw-gtpv2c\
+	    nw-sdp\
+	    nw-mme-emu\
+	    nw-sae-gw
+	
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = openbsc.pc

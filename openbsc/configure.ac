@@ -3,10 +3,6 @@ AC_INIT([openbsc],
 	m4_esyscmd([./git-version-gen .tarball-version]),
 	[openbsc@lists.osmocom.org])
 
-# check for nwEPC
-AC_CONFIG_SRCDIR([nwEPC/nw-mme-emu/NwMmeMain.c])
-AC_CONFIG_SRCDIR([nwEPC/nw-sae-gw/NwSaeGwMain.c])
-
 AM_INIT_AUTOMAKE([dist-bzip2])
 AC_CONFIG_TESTDIR(tests)
 
@@ -16,14 +12,10 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 dnl checks for programs
 AC_PROG_MAKE_SET
 AC_PROG_CC
-AC_PROG_INSTALL
-AC_PROG_RANLIB
-
-# nwEPC
 AC_PROG_CXXCPP
 AC_PROG_CXX
-AM_PROG_CC_C_O
-
+AC_PROG_INSTALL
+AC_PROG_RANLIB
 
 dnl checks for libraries
 AC_SEARCH_LIBS(crypt, crypt,
@@ -176,27 +168,8 @@ AC_MSG_CHECKING([whether to enable VTY/CTRL tests])
 AC_MSG_RESULT([$enable_ext_tests])
 AM_CONDITIONAL(ENABLE_EXT_TESTS, test "x$enable_ext_tests" = "xyes")
 
-# nwEPC
-# distribute additional compiler and linker flags
-# --> set these variables instead of CXXFLAGS or LDFLAGS
-AC_SUBST([AM_CFLAGS])
-AC_SUBST([AM_LDFLAGS])
-
 dnl Generate the output
 AM_CONFIG_HEADER(bscconfig.h)
-
-# this is example-file: configure.ac
-
-# initial information about the project
-AC_INIT([NwEpc],[0.16],[beta])
-
-# check for C++ preprocessor and compiler and the library compiler
-AC_PROG_CXXCPP
-AC_PROG_CXX
-AC_PROG_RANLIB
-
-# automake initialisation and check for minimal automake API version 1.9
-AM_INIT_AUTOMAKE([1.9])
 
 # use the C compiler for the following checks
 AC_LANG([C])
@@ -214,77 +187,67 @@ AC_TYPE_SIZE_T
 AC_SUBST([AM_CFLAGS])
 AC_SUBST([AM_LDFLAGS])
 
+AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([nw-event/Makefile])
+AC_CONFIG_FILES([nw-event/src/Makefile])
+AC_CONFIG_FILES([nw-event/test-app/Makefile])
+AC_CONFIG_FILES([nw-ipv4/Makefile])
+AC_CONFIG_FILES([nw-ipv4/src/Makefile])
+AC_CONFIG_FILES([nw-ipv4/test-app/Makefile])
+AC_CONFIG_FILES([nw-ipv4/test-app/nw-helloworld/Makefile])
+AC_CONFIG_FILES([nw-gre/Makefile])
+AC_CONFIG_FILES([nw-gre/src/Makefile])
+AC_CONFIG_FILES([nw-gre/test-app/Makefile])
+AC_CONFIG_FILES([nw-gre/test-app/nw-helloworld/Makefile])
+AC_CONFIG_FILES([nw-gtpv1u/Makefile])
+AC_CONFIG_FILES([nw-gtpv1u/src/Makefile])
+AC_CONFIG_FILES([nw-gtpv1u/test-app/Makefile])
+AC_CONFIG_FILES([nw-gtpv1u/test-app/nw-helloworld/Makefile])
+AC_CONFIG_FILES([nw-gtpv2c/Makefile])
+AC_CONFIG_FILES([nw-gtpv2c/src/Makefile])
+AC_CONFIG_FILES([nw-gtpv2c/test-app/Makefile])
+AC_CONFIG_FILES([nw-gtpv2c/test-app/nw-helloworld/Makefile])
+AC_CONFIG_FILES([nw-gtpv2c/test-app/nw-egtping/Makefile])
+AC_CONFIG_FILES([nw-sdp/Makefile])
+AC_CONFIG_FILES([nw-sdp/src/Makefile])
+AC_CONFIG_FILES([nw-sdp/test-app/Makefile])
+AC_CONFIG_FILES([nw-sdp/test-app/nw-helloworld/Makefile])
+AC_CONFIG_FILES([nw-mme-emu/Makefile])
+AC_CONFIG_FILES([nw-sae-gw/Makefile])
+AC_CONFIG_FILES([openbsc.pc])
+AC_CONFIG_FILES([include/openbsc/Makefile])
+AC_CONFIG_FILES([include/Makefile])
+AC_CONFIG_FILES([src/Makefile])
+AC_CONFIG_FILES([src/libtrau/Makefile])
+AC_CONFIG_FILES([src/libbsc/Makefile])
+AC_CONFIG_FILES([src/libmsc/Makefile])
+AC_CONFIG_FILES([src/libmgcp/Makefile])
+AC_CONFIG_FILES([src/libcommon/Makefile])
+AC_CONFIG_FILES([src/libfilter/Makefile])
+AC_CONFIG_FILES([src/osmo-nitb/Makefile])
+AC_CONFIG_FILES([src/osmo-bsc/Makefile])
+AC_CONFIG_FILES([src/osmo-bsc_nat/Makefile])
+AC_CONFIG_FILES([src/osmo-bsc_mgcp/Makefile])
+AC_CONFIG_FILES([src/ipaccess/Makefile])
+AC_CONFIG_FILES([src/utils/Makefile])
+AC_CONFIG_FILES([src/gprs/Makefile])
+AC_CONFIG_FILES([tests/Makefile])
+AC_CONFIG_FILES([tests/atlocal])
+AC_CONFIG_FILES([tests/gsm0408/Makefile])
+AC_CONFIG_FILES([tests/db/Makefile])
+AC_CONFIG_FILES([tests/channel/Makefile])
+AC_CONFIG_FILES([tests/bsc/Makefile])
+AC_CONFIG_FILES([tests/bsc-nat/Makefile])
+AC_CONFIG_FILES([tests/bsc-nat-trie/Makefile])
+AC_CONFIG_FILES([tests/mgcp/Makefile])
+AC_CONFIG_FILES([tests/gprs/Makefile])
+AC_CONFIG_FILES([tests/gbproxy/Makefile])
+AC_CONFIG_FILES([tests/abis/Makefile])
+AC_CONFIG_FILES([tests/smpp/Makefile])
+AC_CONFIG_FILES([tests/trau/Makefile])
+AC_CONFIG_FILES([tests/sgsn/Makefile])
+AC_CONFIG_FILES([tests/subscr/Makefile])
+AC_CONFIG_FILES([doc/Makefile])
+AC_CONFIG_FILES([doc/examples/Makefile])
 
-# Change top dirs for nwEPC to allow inclusion trough SUBDIRS variable
-AC_SUBST([nwepc_top_srcdir], $top_srcdir/nwEPC)
-AC_SUBST([nwepc_top_builddir], $top_builddir/nwEPC)
-
-# nwEPC files to generate
-AC_CONFIG_FILES([$nwepc_top_builddir/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-event/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-event/src/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-event/test-app/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-ipv4/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-ipv4/src/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-ipv4/test-app/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-ipv4/test-app/nw-helloworld/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gre/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gre/src/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gre/test-app/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gre/test-app/nw-helloworld/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv1u/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv1u/src/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv1u/test-app/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv1u/test-app/nw-helloworld/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv2c/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv2c/src/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv2c/test-app/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv2c/test-app/nw-helloworld/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-gtpv2c/test-app/nw-egtping/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-sdp/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-sdp/src/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-sdp/test-app/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-sdp/test-app/nw-helloworld/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-mme-emu/Makefile])
-AC_CONFIG_FILES([$nwepc_top_builddir/nw-sae-gw/Makefile])
-
-# generate the final Makefile etc.
-#AC_OUTPUT
-
-AC_OUTPUT(
-    openbsc.pc
-    include/openbsc/Makefile
-    include/Makefile
-    src/Makefile
-    src/libtrau/Makefile
-    src/libbsc/Makefile
-    src/libmsc/Makefile
-    src/libmgcp/Makefile
-    src/libcommon/Makefile
-    src/libfilter/Makefile
-    src/osmo-nitb/Makefile
-    src/osmo-bsc/Makefile
-    src/osmo-bsc_nat/Makefile
-    src/osmo-bsc_mgcp/Makefile
-    src/ipaccess/Makefile
-    src/utils/Makefile
-    src/gprs/Makefile
-    tests/Makefile
-    tests/atlocal
-    tests/gsm0408/Makefile
-    tests/db/Makefile
-    tests/channel/Makefile
-    tests/bsc/Makefile
-    tests/bsc-nat/Makefile
-    tests/bsc-nat-trie/Makefile
-    tests/mgcp/Makefile
-    tests/gprs/Makefile
-    tests/gbproxy/Makefile
-    tests/abis/Makefile
-    tests/smpp/Makefile
-    tests/trau/Makefile
-    tests/sgsn/Makefile
-    tests/subscr/Makefile
-    doc/Makefile
-    doc/examples/Makefile
-    Makefile)
+AC_OUTPUT
