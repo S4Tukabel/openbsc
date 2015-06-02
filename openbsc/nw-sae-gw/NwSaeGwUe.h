@@ -85,6 +85,12 @@ typedef enum
   NW_SAE_GW_UE_EVENT_PGW_GTPC_S5_DELETE_SESSION_REQ,
   NW_SAE_GW_UE_EVENT_PGW_GTPC_S5_DELETE_SESSION_RSP,
 
+  /* SAEGW SGSN S4c Interface Events */
+  NW_SAE_GW_UE_EVENT_SGSN_GTPC_S4_CREATE_SESSION_RSP,
+  NW_SAE_GW_UE_EVENT_SGSN_GTPC_S4_MODIFY_BEARER_RSP,
+  NW_SAE_GW_UE_EVENT_SGSN_GTPC_S4_DELETE_SESSION_REQ,
+  NW_SAE_GW_UE_EVENT_SGSN_GTPC_S4_DELETE_SESSION_RSP,
+          
   NW_SAE_GW_UE_EVENT_SESSION_TIMEOUT,
   NW_SAE_GW_UE_EVENT_NACK,
   NW_SAE_GW_UE_EVENT_END
@@ -164,6 +170,7 @@ typedef struct NwSaeGwUe
   NwGtpv2cStackHandleT          hGtpv2cStackSgwS11;
   NwGtpv2cStackHandleT          hGtpv2cStackSgwS5;
   NwGtpv2cStackHandleT          hGtpv2cStackPgwS5;
+  NwGtpv2cStackHandleT          hGtpv2cStackSgsnS4;
 
   struct {
     NwSaeGwFteidT               fteidMme;

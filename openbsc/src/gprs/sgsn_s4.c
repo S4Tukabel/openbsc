@@ -102,10 +102,17 @@ typedef struct NwGtpv2cPeerS
   NwGtpv2cTunnelHandleT hTunnel;
 } NwGtpv2cPeerT;
 
+
+NwSaeGwT saeGw;
+
+// old vars
 static NwGtpv2cNodeUlpT              ulpObj;
 static NwGtpv2cNodeUdpT              udpObj;
 static NwGtpv2cStackHandleT          hGtpv2cStack = 0;
+  
 NwRcT tukabel_tunel_test(NwGtpv2cNodeUlpT* thiz,NwU32T peerIp);
+NwRcT nwSaeGwInitialize(NwSaeGwT* thiz);
+NwRcT nwSaeGwFinalize(NwSaeGwT*  thiz);
 
  /* 29.274 IMSI, MSISDN - appedn with 1 bits*/
 static void imsi_str2arr(char *str, NwU8T *imsi)
@@ -150,8 +157,9 @@ NwRcT sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHan
   NwU8T apn[] = "internet";  
   NwU32T ip_addr_sgsn = inet_addr("127.0.0.40");
   NwU32T ip_addr_sgw = inet_addr("127.0.0.41");
+  NwGtpv2cStackHandleT gtpv2_stack = saeGw.sgsnUlp.pGw->sgsn.s4c.hGtpv2cStack;
 
-  rc = nwGtpv2cMsgNew( hGtpv2cStack,
+  rc = nwGtpv2cMsgNew( gtpv2_stack,
       NW_TRUE,                                          /* TIED present*/
       NW_GTP_CREATE_SESSION_REQ,                        /* Msg Type    */
       0,                                                /* TEID        */
@@ -268,7 +276,7 @@ NwRcT sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHan
   ulpReq.apiInfo.initialReqInfo.teidLocal       = (NwGtpv2cUlpTrxnHandleT)mmctx;
   ulpReq.apiInfo.initialReqInfo.peerIp          = htonl(ip_addr_sgw);
 
-  rc = nwGtpv2cProcessUlpReq(hGtpv2cStack, &ulpReq);
+  rc = nwGtpv2cProcessUlpReq(gtpv2_stack, &ulpReq);
   NW_ASSERT( NW_OK == rc );
 
   //thiz->s5s8cTunnel.hSgwLocalTunnel = ulpReq.apiInfo.initialReqInfo.hTunnel;
@@ -465,8 +473,65 @@ void S4Finalize() {
 //  return rc;
 //}
 
-NwRcT
-nwSaeGwInitialize(NwSaeGwT* thiz)
+void sgsn_s4_initialize() {
+  NwRcT rc; 
+  
+  // Erase saeGw
+  memset(&saeGw, 0, sizeof(NwSaeGwT));
+  
+  // TODO: load from config or args
+  saeGw.numOfUe         = 100;
+  saeGw.sgsnUlp.s4cIpv4Addr = ntohl(inet_addr("127.0.4.4"));
+  
+  /*---------------------------------------------------------------------------
+   *  Initialize event library
+   *--------------------------------------------------------------------------*/
+
+  NW_EVT_INIT();
+
+  /*---------------------------------------------------------------------------
+   *  Initialize Memory Manager 
+   *--------------------------------------------------------------------------*/
+
+  rc = nwMemInitialize();
+  NW_ASSERT(NW_OK == rc);
+
+  /*---------------------------------------------------------------------------
+   *  Initialize LogMgr
+   *--------------------------------------------------------------------------*/
+
+  rc = nwLogMgrInit(nwLogMgrGetInstance(), (NwU8T*)"NW-SAEGW", getpid());
+  NW_ASSERT(NW_OK == rc);
+
+  /*---------------------------------------------------------------------------
+   * Initialize SAE GW 
+   *--------------------------------------------------------------------------*/
+
+  rc =  nwSaeGwInitialize(&saeGw);
+  NW_ASSERT(NW_OK == rc);
+
+  /*---------------------------------------------------------------------------
+   * Event Loop 
+   *--------------------------------------------------------------------------*/
+
+  NW_EVT_LOOP();
+
+  NW_SAE_GW_LOG(NW_LOG_LEVEL_ERRO, "Exit from eventloop, no events to process!");
+
+  /*---------------------------------------------------------------------------
+   * Finalize SAE GW 
+   *--------------------------------------------------------------------------*/
+
+  rc =  nwSaeGwFinalize(&saeGw);
+  NW_ASSERT(NW_OK == rc);
+
+  rc =  nwMemFinalize();
+  NW_ASSERT(NW_OK == rc);
+ 
+}
+
+
+NwRcT nwSaeGwInitialize(NwSaeGwT* thiz)
 {
   NwRcT rc = NW_OK;
   NwSaeGwUlpT* pGw;
@@ -474,7 +539,7 @@ nwSaeGwInitialize(NwSaeGwT* thiz)
 
   /* Create Data Plane instance. */
 
-  thiz->dataPlane.pDpe    = nwSaeGwDpeInitialize();
+  thiz->dataPlane.pDpe = nwSaeGwDpeInitialize();
 
   /* Create SGW and PGW ULP instances. */
   if(thiz->sgwUlp.s11cIpv4Addr)
@@ -516,6 +581,26 @@ nwSaeGwInitialize(NwSaeGwT* thiz)
     NW_ASSERT( NW_OK == rc );
     thiz->pgwUlp.pGw = pGw;
   }
+  
+  /* Create SGSN ULP instance */
+  if(thiz->sgsnUlp.s4cIpv4Addr)
+  {
+
+    NW_SAE_GW_LOG(NW_LOG_LEVEL_NOTI, "Creating SGSN instance with S4 IPv4 address "NW_IPV4_ADDR, NW_IPV4_ADDR_FORMAT(htonl(thiz->sgsnUlp.s4cIpv4Addr)));
+
+    cfg.maxUeSessions   = thiz->numOfUe;
+    cfg.ippoolSubnet    = thiz->ippoolSubnet;
+    cfg.ippoolMask      = thiz->ippoolMask;
+    cfg.s4cIpv4AddrSgsn = thiz->sgsnUlp.s4cIpv4Addr;
+    cfg.pDpe            = thiz->dataPlane.pDpe;
+
+    strncpy((char*)cfg.apn, (const char*)thiz->apn, 1023);
+
+    pGw = nwSaeGwUlpNew(); 
+    rc = nwSaeGwUlpInitialize(pGw, NW_SAE_GW_TYPE_SGW, &cfg);
+    NW_ASSERT( NW_OK == rc );
+    thiz->sgsnUlp.pGw = pGw;
+  }
 
   /* Register collocated PGW, if any */
   if(thiz->isCombinedGw && 
@@ -536,4 +621,10 @@ nwSaeGwInitialize(NwSaeGwT* thiz)
   }
  
   return rc;
+}
+
+NwRcT
+nwSaeGwFinalize(NwSaeGwT*  thiz)
+{
+  return NW_OK;
 }

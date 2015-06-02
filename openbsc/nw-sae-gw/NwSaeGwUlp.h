@@ -68,6 +68,7 @@ extern "C" {
 
 #define NW_SAE_GW_TYPE_SGW                      (1)
 #define NW_SAE_GW_TYPE_PGW                      (2)
+#define NW_SAE_GW_TYPE_SGSN                     (3)
 
 typedef struct 
 {
@@ -76,6 +77,7 @@ typedef struct
   NwU32T                        s5cIpv4AddrSgw;
   NwU32T                        s4cIpv4AddrSgw;
   NwU32T                        s5cIpv4AddrPgw;
+  NwU32T                        s4cIpv4AddrSgsn;
   NwU8T                         apn[1024];
   NwU32T                        ippoolSubnet;
   NwU32T                        ippoolMask;
@@ -113,6 +115,11 @@ typedef struct NwSaeGwUlp
     NwSaeGwGtpv2cSapT           s5c;
   } pgw;
 
+  struct
+  {
+    NwSaeGwGtpv2cSapT           s4c;
+  } sgsn;
+  
   NwU32T                        ipv4AddrPool;
   NwSaeGwDpeT                   *pDpe;
   TAILQ_ENTRY(NwSaeGwUlp)       collocatedPgwListNode;

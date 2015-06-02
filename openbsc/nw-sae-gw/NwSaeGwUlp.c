@@ -564,6 +564,171 @@ gPgwS5GtpcMsgToUeEventMap[] =
   /* End.. phewww !! */
 };
 
+// TUKABEL - to extend refer to  gSgwS5GtpcMsgToUeEventMap
+static NwSaeGwUeEventT 
+gSgsnS4GtpcMsgToUeEventMap[] =
+{
+  /* 0 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+  /* 5 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+  /* 10 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+  /* 15 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+  /* 20 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+  /* 25 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 30 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+  /* 33 */
+  NW_SAE_GW_UE_EVENT_SGSN_GTPC_S4_CREATE_SESSION_RSP, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 35 */
+  NW_SAE_GW_UE_EVENT_NULL, //NW_SAE_GW_UE_EVENT_SGW_GTPC_S5_MODIFY_BEARER_RSP,
+  /* 36 */
+  NW_SAE_GW_UE_EVENT_NULL, //NW_SAE_GW_UE_EVENT_SGW_GTPC_S5_DELETE_SESSION_REQ,
+  /* 37 */
+  NW_SAE_GW_UE_EVENT_NULL, //NW_SAE_GW_UE_EVENT_SGW_GTPC_S5_DELETE_SESSION_RSP,
+  /* 38 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 40 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 45 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 50 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 55 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 60 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 65 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 70 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 75 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 80 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 85 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 90 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 95 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 100 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 105 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 110 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 115 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 120 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 125 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 130 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 135 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 140 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 145 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 150 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 155 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 160 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 165 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 170 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 175 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 180 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 185 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 190 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 195 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 200 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 205 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 210 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 215 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 220 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 225 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 230 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 235 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 240 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 245 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 250 */
+  NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL, NW_SAE_GW_UE_EVENT_NULL,
+
+  /* 255 */
+  NW_SAE_GW_UE_EVENT_NULL, 
+  /* End.. phewww !! */
+};
+
 /*---------------------------------------------------------------------------
  * RBTree Search Functions 
  *--------------------------------------------------------------------------*/
@@ -910,6 +1075,131 @@ nwSaeGwUlpSgwS5GtpcStackIndication (NwGtpv2cUlpHandleT hUlp,
 }
 
 static NwRcT 
+nwSaeGwUlpSgsnS4GtpcStackIndication (NwGtpv2cUlpHandleT hUlp, 
+                       NwGtpv2cUlpApiT *pUlpApi)
+{
+  NwRcT                         rc = NW_OK;
+  NwSaeGwUlpT*                  thiz;
+  NwUeStateT                    ueState;
+  NwSaeGwUeT                    *pUe = NULL;
+  NwSaeGwUeEventInfoT           eventInfo;
+
+  NW_ASSERT(pUlpApi != NULL);
+
+  thiz = (NwSaeGwUlpT*) hUlp;
+
+  NW_ASSERT(thiz->saeGwType == NW_SAE_GW_TYPE_SGSN);
+
+  switch(pUlpApi->apiType)
+  {
+//    case NW_GTPV2C_ULP_API_INITIAL_REQ_IND:
+//      {
+//        eventInfo.event = gSgsnS4GtpcMsgToUeEventMap[pUlpApi->apiInfo.initialReqIndInfo.msgType];
+//        eventInfo.arg   = pUlpApi;
+//
+//        if((NwSaeGwUeT*)pUlpApi->apiInfo.initialReqIndInfo.hUlpTunnel)
+//        {
+//          /* If it is a request ULP and tunnel handle is set, it is new message on existing session. */
+//          pUe = (NwSaeGwUeT*)pUlpApi->apiInfo.initialReqIndInfo.hUlpTunnel;
+//        }
+//        else
+//        {
+//          /* If it is a request ULP and tunnel handle is NOT set, it is probably new session request */
+//          NW_SAE_GW_LOG(NW_LOG_LEVEL_INFO, "Received NW_GTPV2C_ULP_API_INITIAL_REQ_IND from SGSN S4 GTPv2c stack for non-existent UE context!");
+//          rc = nwSaeGwUlpCreateUeSession(thiz, &pUe);
+//          if(rc != NW_OK)
+//          {
+//            NW_SAE_GW_LOG(NW_LOG_LEVEL_ERRO, "Failed to create UE context!");
+//          }
+//        }
+//
+//        if(pUe)
+//        {
+//          rc = nwSaeGwUeFsmRun(thiz->pUeFsm, pUe, &eventInfo, &ueState);
+//          if(ueState == NW_SAE_GW_UE_STATE_END)
+//          {
+//            NW_SAE_GW_LOG(NW_LOG_LEVEL_NOTI, "Purging UE session with IMSI %llx", NW_NTOHLL(((*(NwU64T*)pUe->imsi))));
+//            rc = nwSaeGwUlpDestroyUeSession(thiz, &pUe);
+//          } 
+//        }
+//      }
+//      break;
+
+    case NW_GTPV2C_ULP_API_TRIGGERED_RSP_IND:
+      {
+        eventInfo.event = gSgsnS4GtpcMsgToUeEventMap[pUlpApi->apiInfo.triggeredRspIndInfo.msgType];
+        eventInfo.arg   = pUlpApi;
+
+        NW_SAE_GW_LOG(NW_LOG_LEVEL_DEBG, "pUlpApi->apiInfo.triggeredRspIndInfo.msgType = %u eventInfo.event = %u!", pUlpApi->apiInfo.initialReqIndInfo.msgType, eventInfo.event);
+        if((NwSaeGwUeT*)pUlpApi->apiInfo.triggeredRspIndInfo.hUlpTunnel)
+        {
+          NW_SAE_GW_LOG(NW_LOG_LEVEL_DEBG, "Received NW_GTPV2C_ULP_API_TRIGGERED_RSP_IND from SGSN S4 GTPv2c stack for teid %x!", ntohl((NwU32T)(pUlpApi->apiInfo.triggeredRspIndInfo.hUlpTunnel)));
+          pUe = (NwSaeGwUeT*)pUlpApi->apiInfo.triggeredRspIndInfo.hUlpTunnel;
+        }
+        else
+        {
+          NW_SAE_GW_LOG(NW_LOG_LEVEL_INFO, "Received NW_GTPV2C_ULP_API_TRIGGERED_RSP_IND from SGSN S4 GTPv2c stack for non-existent UE context! Ignoring.");
+        }
+
+        if(pUe)
+        {
+          rc = nwSaeGwUeFsmRun(thiz->pUeFsm, pUe, &eventInfo, &ueState);
+          if(ueState == NW_SAE_GW_UE_STATE_END)
+          {
+            NW_SAE_GW_LOG(NW_LOG_LEVEL_NOTI, "Purging UE session with IMSI %llx", NW_NTOHLL(((*(NwU64T*)pUe->imsi))));
+            rc = nwSaeGwUlpDestroyUeSession(thiz, &pUe);
+          } 
+        }
+      }
+      break;
+
+//    case NW_GTPV2C_ULP_API_TRIGGERED_REQ_IND:
+//      {
+//        eventInfo.event = gSgsnS4GtpcMsgToUeEventMap[pUlpApi->apiInfo.triggeredReqIndInfo.msgType];
+//        eventInfo.arg   = pUlpApi;
+//        NW_SAE_GW_LOG(NW_LOG_LEVEL_DEBG, "Received NW_GTPV2C_ULP_API_TRIGGERED_REQ_IND from SGSN S4 GTPv2c stack!");
+//
+//        pUe = (NwSaeGwUeT*)pUlpApi->apiInfo.triggeredReqIndInfo.hUlpTunnel;
+//        rc = nwSaeGwUeFsmRun(thiz->pUeFsm, pUe, &eventInfo, &ueState);
+//      }
+//      break;
+
+
+    case NW_GTPV2C_ULP_API_RSP_FAILURE_IND:
+      {
+        eventInfo.event   = NW_SAE_GW_UE_EVENT_NACK;
+        eventInfo.arg     = pUlpApi;
+        NW_SAE_GW_LOG(NW_LOG_LEVEL_DEBG, "Received NW_GTPV2C_ULP_API_RSP_FAILURE from SGSN S4 GTPv2c stack for session 0x%x and transaction 0x%x!",
+            pUlpApi->apiInfo.rspFailureInfo.hUlpTunnel,
+            pUlpApi->apiInfo.rspFailureInfo.hUlpTrxn);
+
+        pUe = (NwSaeGwUeT*)pUlpApi->apiInfo.rspFailureInfo.hUlpTunnel;
+        if(pUe)
+        {
+          rc = nwSaeGwUeFsmRun(thiz->pUeFsm, pUe, &eventInfo, &ueState);
+          if(ueState == NW_SAE_GW_UE_STATE_END)
+          {
+            NW_SAE_GW_LOG(NW_LOG_LEVEL_NOTI, "Purging UE context with IMSI %llx!",(*((NwU64T*)(pUe->imsi))) );
+            rc = nwSaeGwUlpDestroyUeSession(thiz, &pUe);
+          }
+        }
+      }
+      break;
+
+    default:
+      {
+        NW_SAE_GW_LOG(NW_LOG_LEVEL_WARN, "Received undefined api type %x from SGSN S4 GTPv2c stack!", pUlpApi->apiType);
+        rc = NW_FAILURE;
+      }
+  }
+
+  if(pUlpApi->hMsg)
+    rc = nwGtpv2cMsgDelete(thiz->sgw.s5c.hGtpv2cStack, (pUlpApi->hMsg));
+
+  return rc;
+}
+
+static NwRcT 
 nwSaeGwUlpPgwS5GtpcStackIndication (NwGtpv2cUlpHandleT hUlp, 
                        NwGtpv2cUlpApiT *pUlpApi)
 {
@@ -1184,6 +1474,7 @@ nwSaeGwUlpInitialize(NwSaeGwUlpT*     thiz,
   thiz->sgw.s5c.ipv4Addr        = pCfg->s5cIpv4AddrSgw;
   thiz->sgw.s4c.ipv4Addr        = pCfg->s4cIpv4AddrSgw;
   thiz->pgw.s5c.ipv4Addr        = pCfg->s5cIpv4AddrPgw;
+  thiz->sgsn.s4c.ipv4Addr       = pCfg->s4cIpv4AddrSgsn;
   thiz->pDpe                    = pCfg->pDpe;
   memcpy(thiz->apn, pCfg->apn, 1024);
 
@@ -1278,6 +1569,35 @@ nwSaeGwUlpInitialize(NwSaeGwUlpT*     thiz,
       NW_SAE_GW_LOG(NW_LOG_LEVEL_ERRO, "Failed to create IPv4 pool!");
       NW_ASSERT(0);
     }
+  }
+  else if(thiz->saeGwType == NW_SAE_GW_TYPE_SGSN)
+  {
+    /* Create S4 TUKABEL SGSN-S4 Gtpv2c Service Access Point*/
+
+    rc = nwSaeGwUlpCreateGtpv2cStackInstance(thiz, &thiz->sgsn.s4c.hGtpv2cStack);
+    NW_ASSERT( NW_OK == rc );
+
+    /* Initialize and Set UDP Entity */
+    rc = nwGtpv2cIfInitialize(&thiz->sgsn.s4c.udpIf, thiz->sgsn.s4c.ipv4Addr, thiz->sgsn.s4c.hGtpv2cStack);
+    NW_ASSERT( NW_OK == rc );
+
+    rc = nwGtpv2cIfGetSelectionObject(&thiz->sgsn.s4c.udpIf, &gtpcIfSelObj);
+    NW_ASSERT( NW_OK == rc );
+
+    NW_EVENT_ADD((thiz->sgsn.s4c.ev), gtpcIfSelObj, nwGtpv2cIfDataIndicationCallback, &thiz->sgsn.s4c.udpIf, (NW_EVT_READ | NW_EVT_PERSIST));
+
+    udp.hUdp               = (NwGtpv2cUdpHandleT)&thiz->sgsn.s4c.udpIf;
+    udp.udpDataReqCallback = nwGtpv2cIfDataReq;
+    rc = nwGtpv2cSetUdpEntity(thiz->sgsn.s4c.hGtpv2cStack, &udp);
+    NW_ASSERT( NW_OK == rc );
+
+    /* Initialize and Set ULP Entity */
+    ulp.hUlp = (NwGtpv2cUlpHandleT) thiz;
+    ulp.ulpReqCallback = nwSaeGwUlpSgsnS4GtpcStackIndication;
+
+    rc = nwGtpv2cSetUlpEntity(thiz->sgsn.s4c.hGtpv2cStack, &ulp);
+    NW_ASSERT( NW_OK == rc );
+
   }
   else
   {
