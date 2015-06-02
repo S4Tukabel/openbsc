@@ -22,6 +22,7 @@
 #include <mylib/NwGtpv2cMsgParser.h>
 #include "openbsc/NwMiniLogMgrEntity.h"
 #include "openbsc/NwMiniUlpEntity.h"
+#include "openbsc/sgsn_s4.h"
 
 #ifndef NW_ASSERT
 #define NW_ASSERT assert
@@ -31,6 +32,13 @@
 extern "C" {
 #endif
 
+    typedef struct
+{
+  NwGtpv2cErrorT                error;
+  //NwSaeGwEpsBearerT             epsBearerCreated;
+  //NwSaeGwEpsBearerT             epsBearerRemoved;
+} NwSaeGwUePgwCreateSessionResponseT;
+    
 static
 NwCharT* gLogLevelStr[] = {"EMER", "ALER", "CRIT",  "ERRO", "WARN", "NOTI", "INFO", "DEBG"};
 
@@ -172,6 +180,9 @@ nwGtpv2cUlpProcessStackReqCallback (NwGtpv2cUlpHandleT hUlp,
   struct timeval        tv;
   NwGtpv2cPeerT         *pPeer;
   NwGtpv2cNodeUlpT*     thiz;
+  NwU8T *pPaaBuf;
+  NwU16T paaBufLen;
+  NwSaeGwPaaT paa;
   NW_ASSERT(pUlpApi != NULL);
 
   thiz = (NwGtpv2cNodeUlpT*) hUlp;
@@ -181,7 +192,7 @@ nwGtpv2cUlpProcessStackReqCallback (NwGtpv2cUlpHandleT hUlp,
     case NW_GTPV2C_ULP_API_TRIGGERED_RSP_IND:
       {
         pPeer = (NwGtpv2cPeerT*)pUlpApi->apiInfo.triggeredRspIndInfo.hUlpTrxn;
-
+        NW_LOG(NW_LOG_LEVEL_NOTI, "TUKABEL: Prijal som spravu" );
         if(pUlpApi->apiInfo.triggeredRspIndInfo.msgType == NW_GTP_ECHO_RSP)
         {
           seqNum = nwGtpv2cMsgGetSeqNumber(pUlpApi->hMsg);
@@ -198,7 +209,38 @@ nwGtpv2cUlpProcessStackReqCallback (NwGtpv2cUlpHandleT hUlp,
             if(pPeer->pingCount != 0xffffffff) pPeer->pingCount--;
           }
         }
+        if(pUlpApi->apiInfo.triggeredRspIndInfo.msgType == NW_GTP_CREATE_SESSION_RSP)
+        {
+            NwGtpv2cMsgHandleT hReqMsg = pUlpApi->hMsg;
+            //NwSaeGwUePgwCreateSessionResponseT pCreateSessReq;
+            seqNum = nwGtpv2cMsgGetSeqNumber(pUlpApi->hMsg);
+            len = nwGtpv2cMsgGetLength(pUlpApi->hMsg);
+            NW_LOG(NW_LOG_LEVEL_NOTI, "TUKABEL: Prijal som response" );
+            rc = nwGtpv2cMsgGetIeFteid(hReqMsg,
+            NW_GTPV2C_IE_INSTANCE_ONE,
+            &thiz->s4Tunnel.fteid.ifType,
+            &thiz->s4Tunnel.fteid.teidOrGreKey,
+            &thiz->s4Tunnel.fteid.ipv4Addr,
+            &thiz->s4Tunnel.fteid.ipv6Addr[0]);
+            if( NW_OK != rc )
+            {
+              return rc;
+            }
+               
+            if((rc = nwGtpv2cMsgGetIeTlvP(hReqMsg, NW_GTPV2C_IE_PAA, NW_GTPV2C_IE_INSTANCE_ZERO, &pPaaBuf, &paaBufLen)) != NW_OK)
+            {
+                return rc;
+            }
+            paa.pdnType = *pPaaBuf;
 
+            if(paa.pdnType == NW_PDN_TYPE_IPv4)
+            {
+              pPaaBuf++;
+              memcpy(paa.ipv4Addr, pPaaBuf, 4);
+              return NW_OK;
+            }
+            NW_LOG(NW_LOG_LEVEL_NOTI, "TUKABEL: Prijal som response" );
+        }
       }
       break;
 

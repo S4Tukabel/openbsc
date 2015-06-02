@@ -19,11 +19,29 @@
 #ifndef __NW_MINI_ULP_H__ 
 #define __NW_MINI_ULP_H__ 
 
+typedef struct 
+{
+  NwBoolT isValid;
+  NwBoolT isIpv4;
+  NwBoolT isIpv6;
+  NwU8T   ifType;
+  NwU32T  teidOrGreKey;
+  NwU32T  ipv4Addr;
+  NwU8T   ipv6Addr[16];
+} TukabelFteidT;
+
+typedef struct 
+{
+    TukabelFteidT fteid;
+} TukabelS4Tunnel;
+
 typedef struct
 {
   NwU8T                         peerIpStr[16];
   NwU32T                        restartCounter;
   NwGtpv2cStackHandleT          hGtpv2cStack;
+  TukabelS4Tunnel               s4Tunnel;
+  
 } NwGtpv2cNodeUlpT;
 
 #ifdef __cplusplus

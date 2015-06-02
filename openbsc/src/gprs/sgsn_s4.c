@@ -163,7 +163,7 @@ NwRcT sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHan
     rc = nwGtpv2cMsgAddIeFteid((ulpReq.hMsg),
         NW_GTPV2C_IE_INSTANCE_TWO,
         NW_GTPV2C_IFTYPE_S4_SGSN_GTPU,
-        ((NwU32T)(3)),
+        ((NwU32T)(mmctx)),
         htonl(ip_addr_sgsn),
         NULL);
     NW_ASSERT( NW_OK == rc );
