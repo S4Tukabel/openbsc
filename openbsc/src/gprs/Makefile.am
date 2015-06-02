@@ -1,10 +1,10 @@
 NWEPC_CFLAGS = -DNW_LOG_TO_FILE\
+	-I$(top_srcdir)/common\
 	-I$(top_srcdir)/nw-gtpv2c/include\
 	-I$(top_srcdir)/nw-gtpv2c/shared\
 	-I$(top_srcdir)/nw-gtpv1u/include\
 	-I$(top_srcdir)/nw-gtpv1u/shared\
 	-I$(top_srcdir)/nw-sdp/shared\
-	-I$(top_srcdir)/common\
 	-I$(top_srcdir)/include\
 	-I$(top_srcdir)/utils/nw-ipv4-if\
 	-I$(top_srcdir)/utils/nw-gtpv2c-if\

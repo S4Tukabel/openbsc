@@ -1,4 +1,4 @@
-#define __WITH_LIBEVENT__
+//#define __WITH_LIBEVENT__
 
 #include <stdio.h>
 #include <assert.h>
@@ -49,7 +49,7 @@
 #include "NwGtpv2cIf.h"
 #include "NwSaeGwDpe.h"
 
-
+#include <pthread.h>
 
 //FROM nwMain
 typedef struct
@@ -104,11 +104,12 @@ typedef struct NwGtpv2cPeerS
 
 
 NwSaeGwT saeGw;
+pthread_t nw_loop_thread;
 
 // old vars
-static NwGtpv2cNodeUlpT              ulpObj;
-static NwGtpv2cNodeUdpT              udpObj;
-static NwGtpv2cStackHandleT          hGtpv2cStack = 0;
+//static NwGtpv2cNodeUlpT              ulpObj;
+//static NwGtpv2cNodeUdpT              udpObj;
+//static NwGtpv2cStackHandleT          hGtpv2cStack = 0;
   
 NwRcT tukabel_tunel_test(NwGtpv2cNodeUlpT* thiz,NwU32T peerIp);
 NwRcT nwSaeGwInitialize(NwSaeGwT* thiz);
@@ -267,171 +268,186 @@ NwRcT sgsn_s4_send_create_session_request(/*NwSaeGwUeT* thiz, NwGtpv2cUlpTrxnHan
     NW_ASSERT( NW_OK == rc );
 
   /* End - Encoding of grouped IE "bearer context created" */
+    
+    
+//----------------------------- first version
+//  /* Send Create Session Request to SGW */
+//  ulpReq.apiType = (NW_GTPV2C_ULP_API_INITIAL_REQ | NW_GTPV2C_ULP_API_FLAG_CREATE_LOCAL_TUNNEL);
+//  ulpReq.apiInfo.initialReqInfo.hTunnel         = 0;                       
+//  ulpReq.apiInfo.initialReqInfo.hUlpTrxn        = 0; //tukabel zero/// hTrxn;                        /* Save the trxn for Response */
+//  ulpReq.apiInfo.initialReqInfo.hUlpTunnel      = (NwGtpv2cUlpTrxnHandleT)mmctx;
+//  ulpReq.apiInfo.initialReqInfo.teidLocal       = (NwGtpv2cUlpTrxnHandleT)mmctx;
+//  ulpReq.apiInfo.initialReqInfo.peerIp          = htonl(ip_addr_sgw);
+//
+//  rc = nwGtpv2cProcessUlpReq(gtpv2_stack, &ulpReq);
+//  NW_ASSERT( NW_OK == rc );
 
-  /* Send Create Session Request to SGW */
+  //thiz->s5s8cTunnel.hSgwLocalTunnel = ulpReq.apiInfo.initialReqInfo.hTunnel;
+
+ //------------------------ superkabel version
   ulpReq.apiType = (NW_GTPV2C_ULP_API_INITIAL_REQ | NW_GTPV2C_ULP_API_FLAG_CREATE_LOCAL_TUNNEL);
+
   ulpReq.apiInfo.initialReqInfo.hTunnel         = 0;                       
-  ulpReq.apiInfo.initialReqInfo.hUlpTrxn        = 0; //tukabel zero/// hTrxn;                        /* Save the trxn for Response */
-  ulpReq.apiInfo.initialReqInfo.hUlpTunnel      = (NwGtpv2cUlpTrxnHandleT)mmctx;
-  ulpReq.apiInfo.initialReqInfo.teidLocal       = (NwGtpv2cUlpTrxnHandleT)mmctx;
-  ulpReq.apiInfo.initialReqInfo.peerIp          = htonl(ip_addr_sgw);
+  ulpReq.apiInfo.initialReqInfo.hUlpTrxn        = hTrxn;                        /* Save the trxn for Response */
+  ulpReq.apiInfo.initialReqInfo.hUlpTunnel      = (NwGtpv2cUlpTrxnHandleT)thiz;
+  ulpReq.apiInfo.initialReqInfo.teidLocal       = (NwGtpv2cUlpTrxnHandleT)thiz;
+  ulpReq.apiInfo.initialReqInfo.peerIp          = htonl(thiz->s5s8cTunnel.fteidPgw.ipv4Addr);
 
   rc = nwGtpv2cProcessUlpReq(gtpv2_stack, &ulpReq);
   NW_ASSERT( NW_OK == rc );
 
-  //thiz->s5s8cTunnel.hSgwLocalTunnel = ulpReq.apiInfo.initialReqInfo.hTunnel;
-
-  //first param: LOGL_INFO	3 //not found?!!
+  thiz->s5s8cTunnel.hSgwLocalTunnel = ulpReq.apiInfo.initialReqInfo.hTunnel;
+ 
   LOGMMCTXP(LOGL_INFO, mmctx, "-> CREATE SESSION REQ: IMSI=%s <TUKABEL>\n", mmctx->imsi);
 
   return rc;
 }
 
 
-void S4Initialize(NwU8T localIpStr[20], NwU8T targetIpStr[20])
-{
-  NwRcT                         rc; 
-  NwU32T                        logLevel;
-  NwU8T*                        logLevelStr;
-
-  NwGtpv2cUlpEntityT            ulp;
-  NwGtpv2cUdpEntityT            udp;
-  NwGtpv2cTimerMgrEntityT       tmrMgr;
-  NwGtpv2cLogMgrEntityT         logMgr;
-  
-
-  //logLevelStr = getenv ("NW_LOG_LEVEL");
-  logLevelStr = "DEBG";
-
-  if(logLevelStr == NULL)
-  {
-    logLevel = NW_LOG_LEVEL_INFO;
-  }
-  else
-  {
-    if(strncmp(logLevelStr, "EMER",4) == 0)
-      logLevel = NW_LOG_LEVEL_EMER;
-    else if(strncmp(logLevelStr, "ALER",4) == 0)
-      logLevel = NW_LOG_LEVEL_ALER;
-    else if(strncmp(logLevelStr, "CRIT",4) == 0)
-      logLevel = NW_LOG_LEVEL_CRIT;
-    else if(strncmp(logLevelStr, "ERRO",4) == 0)
-      logLevel = NW_LOG_LEVEL_ERRO ;
-    else if(strncmp(logLevelStr, "WARN",4) == 0)
-      logLevel = NW_LOG_LEVEL_WARN;
-    else if(strncmp(logLevelStr, "NOTI",4) == 0)
-      logLevel = NW_LOG_LEVEL_NOTI;
-    else if(strncmp(logLevelStr, "INFO",4) == 0)
-      logLevel = NW_LOG_LEVEL_INFO;
-    else if(strncmp(logLevelStr, "DEBG",4) == 0)
-      logLevel = NW_LOG_LEVEL_DEBG;
-  }
-
-  /*---------------------------------------------------------------------------
-   *  Initialize event library
-   *--------------------------------------------------------------------------*/
-
-  NW_EVT_INIT();
-
-  /*---------------------------------------------------------------------------
-   *  Initialize Log Manager 
-   *--------------------------------------------------------------------------*/
-  nwMiniLogMgrInit(nwMiniLogMgrGetInstance(), logLevel);
-
-  /*---------------------------------------------------------------------------
-   *  Initialize Gtpv2c Stack Instance
-   *--------------------------------------------------------------------------*/
-  rc = nwGtpv2cInitialize(&hGtpv2cStack);
-
-  if(rc != NW_OK)
-  {
-    NW_LOG(NW_LOG_LEVEL_ERRO, "Failed to create gtpv2c stack instance. Error '%u' occured", rc);
-    exit(1);
-  }
-
-  rc = nwGtpv2cSetLogLevel(hGtpv2cStack, logLevel);
-
-  /*---------------------------------------------------------------------------
-   * Set up Ulp Entity 
-   *--------------------------------------------------------------------------*/
-  rc = nwGtpv2cUlpInit(&ulpObj, hGtpv2cStack, localIpStr);
-  NW_ASSERT(NW_OK == rc);
-
-  ulp.hUlp = (NwGtpv2cUlpHandleT) &ulpObj;
-  ulp.ulpReqCallback = nwGtpv2cUlpProcessStackReqCallback;
-
-  rc = nwGtpv2cSetUlpEntity(hGtpv2cStack, &ulp);
-  NW_ASSERT(NW_OK == rc);
-
-  /*---------------------------------------------------------------------------
-   * Set up Udp Entity 
-   *--------------------------------------------------------------------------*/
-  rc = nwGtpv2cUdpInit(&udpObj, hGtpv2cStack, localIpStr);
-  NW_ASSERT(NW_OK == rc);
-
-  udp.hUdp = (NwGtpv2cUdpHandleT) &udpObj;
-  udp.udpDataReqCallback = nwGtpv2cUdpDataReq;
-
-  rc = nwGtpv2cSetUdpEntity(hGtpv2cStack, &udp);
-  NW_ASSERT(NW_OK == rc);
-
-  /*---------------------------------------------------------------------------
-   * Set up Log Entity 
-   *--------------------------------------------------------------------------*/
-  tmrMgr.tmrMgrHandle = 0;
-  tmrMgr.tmrStartCallback = nwTimerStart;
-  tmrMgr.tmrStopCallback = nwTimerStop;
-
-  rc = nwGtpv2cSetTimerMgrEntity(hGtpv2cStack, &tmrMgr);
-  NW_ASSERT(NW_OK == rc);
-
-  /*---------------------------------------------------------------------------
-   * Set up Log Entity 
-   *--------------------------------------------------------------------------*/
-  logMgr.logMgrHandle   = (NwGtpv2cLogMgrHandleT) nwMiniLogMgrGetInstance();
-  logMgr.logReqCallback  = nwMiniLogMgrLogRequest;
-
-  rc = nwGtpv2cSetLogMgrEntity(hGtpv2cStack, &logMgr);
-  NW_ASSERT(NW_OK == rc);
-
-  /*---------------------------------------------------------------------------
-   *  Send Message Request to Gtpv2c Stack Instance
-   *--------------------------------------------------------------------------*/
-  //tukabel_tunel_test(&ulpObj,inet_addr(targetIpStr));
-  
-//  NW_LOG(NW_LOG_LEVEL_NOTI, "EGTPING %s ("NW_IPV4_ADDR")", targetIpStr, NW_IPV4_ADDR_FORMAT(inet_addr(targetIpStr)));
-//  rc = nwGtpv2cUlpPing(&ulpObj, 
-//                        inet_addr(targetIpStr),
-//                        4,
-//                        10,
-//                        2,
-//                        3);
+//void S4Initialize(NwU8T localIpStr[20], NwU8T targetIpStr[20])
+//{
+//  NwRcT                         rc; 
+//  NwU32T                        logLevel;
+//  NwU8T*                        logLevelStr;
+//
+//  NwGtpv2cUlpEntityT            ulp;
+//  NwGtpv2cUdpEntityT            udp;
+//  NwGtpv2cTimerMgrEntityT       tmrMgr;
+//  NwGtpv2cLogMgrEntityT         logMgr;
+//  
+//
+//  //logLevelStr = getenv ("NW_LOG_LEVEL");
+//  logLevelStr = "DEBG";
+//
+//  if(logLevelStr == NULL)
+//  {
+//    logLevel = NW_LOG_LEVEL_INFO;
+//  }
+//  else
+//  {
+//    if(strncmp(logLevelStr, "EMER",4) == 0)
+//      logLevel = NW_LOG_LEVEL_EMER;
+//    else if(strncmp(logLevelStr, "ALER",4) == 0)
+//      logLevel = NW_LOG_LEVEL_ALER;
+//    else if(strncmp(logLevelStr, "CRIT",4) == 0)
+//      logLevel = NW_LOG_LEVEL_CRIT;
+//    else if(strncmp(logLevelStr, "ERRO",4) == 0)
+//      logLevel = NW_LOG_LEVEL_ERRO ;
+//    else if(strncmp(logLevelStr, "WARN",4) == 0)
+//      logLevel = NW_LOG_LEVEL_WARN;
+//    else if(strncmp(logLevelStr, "NOTI",4) == 0)
+//      logLevel = NW_LOG_LEVEL_NOTI;
+//    else if(strncmp(logLevelStr, "INFO",4) == 0)
+//      logLevel = NW_LOG_LEVEL_INFO;
+//    else if(strncmp(logLevelStr, "DEBG",4) == 0)
+//      logLevel = NW_LOG_LEVEL_DEBG;
+//  }
+//
+//  /*---------------------------------------------------------------------------
+//   *  Initialize event library
+//   *--------------------------------------------------------------------------*/
+//
+//  NW_EVT_INIT();
+//
+//  /*---------------------------------------------------------------------------
+//   *  Initialize Log Manager 
+//   *--------------------------------------------------------------------------*/
+//  nwMiniLogMgrInit(nwMiniLogMgrGetInstance(), logLevel);
+//
+//  /*---------------------------------------------------------------------------
+//   *  Initialize Gtpv2c Stack Instance
+//   *--------------------------------------------------------------------------*/
+//  rc = nwGtpv2cInitialize(&hGtpv2cStack);
+//
+//  if(rc != NW_OK)
+//  {
+//    NW_LOG(NW_LOG_LEVEL_ERRO, "Failed to create gtpv2c stack instance. Error '%u' occured", rc);
+//    exit(1);
+//  }
+//
+//  rc = nwGtpv2cSetLogLevel(hGtpv2cStack, logLevel);
+//
+//  /*---------------------------------------------------------------------------
+//   * Set up Ulp Entity 
+//   *--------------------------------------------------------------------------*/
+//  rc = nwGtpv2cUlpInit(&ulpObj, hGtpv2cStack, localIpStr);
 //  NW_ASSERT(NW_OK == rc);
-
-  /*---------------------------------------------------------------------------
-   * Install signal handler 
-   *--------------------------------------------------------------------------*/
-  //signal(SIGINT, nwEgtPingHandleSignal);
-
-  /*---------------------------------------------------------------------------
-   * Event loop 
-   *--------------------------------------------------------------------------*/
-
-  //NW_EVT_LOOP();
-  //NW_LOG(NW_LOG_LEVEL_ERRO, "Exit from eventloop, no events to process!");
-
-  /*---------------------------------------------------------------------------
-   *  Destroy Gtpv2c Stack Instance
-   *--------------------------------------------------------------------------*/
-}
-
-void S4Finalize() {
-  NwRcT rc = nwGtpv2cFinalize(hGtpv2cStack);
-  if(rc != NW_OK)
-  {
-    NW_LOG(NW_LOG_LEVEL_ERRO, "Failed to finalize gtpv2c stack instance. Error '%u' occured", rc);
-  }
-}
+//
+//  ulp.hUlp = (NwGtpv2cUlpHandleT) &ulpObj;
+//  ulp.ulpReqCallback = nwGtpv2cUlpProcessStackReqCallback;
+//
+//  rc = nwGtpv2cSetUlpEntity(hGtpv2cStack, &ulp);
+//  NW_ASSERT(NW_OK == rc);
+//
+//  /*---------------------------------------------------------------------------
+//   * Set up Udp Entity 
+//   *--------------------------------------------------------------------------*/
+//  rc = nwGtpv2cUdpInit(&udpObj, hGtpv2cStack, localIpStr);
+//  NW_ASSERT(NW_OK == rc);
+//
+//  udp.hUdp = (NwGtpv2cUdpHandleT) &udpObj;
+//  udp.udpDataReqCallback = nwGtpv2cUdpDataReq;
+//
+//  rc = nwGtpv2cSetUdpEntity(hGtpv2cStack, &udp);
+//  NW_ASSERT(NW_OK == rc);
+//
+//  /*---------------------------------------------------------------------------
+//   * Set up Log Entity 
+//   *--------------------------------------------------------------------------*/
+//  tmrMgr.tmrMgrHandle = 0;
+//  tmrMgr.tmrStartCallback = nwTimerStart;
+//  tmrMgr.tmrStopCallback = nwTimerStop;
+//
+//  rc = nwGtpv2cSetTimerMgrEntity(hGtpv2cStack, &tmrMgr);
+//  NW_ASSERT(NW_OK == rc);
+//
+//  /*---------------------------------------------------------------------------
+//   * Set up Log Entity 
+//   *--------------------------------------------------------------------------*/
+//  logMgr.logMgrHandle   = (NwGtpv2cLogMgrHandleT) nwMiniLogMgrGetInstance();
+//  logMgr.logReqCallback  = nwMiniLogMgrLogRequest;
+//
+//  rc = nwGtpv2cSetLogMgrEntity(hGtpv2cStack, &logMgr);
+//  NW_ASSERT(NW_OK == rc);
+//
+//  /*---------------------------------------------------------------------------
+//   *  Send Message Request to Gtpv2c Stack Instance
+//   *--------------------------------------------------------------------------*/
+//  //tukabel_tunel_test(&ulpObj,inet_addr(targetIpStr));
+//  
+////  NW_LOG(NW_LOG_LEVEL_NOTI, "EGTPING %s ("NW_IPV4_ADDR")", targetIpStr, NW_IPV4_ADDR_FORMAT(inet_addr(targetIpStr)));
+////  rc = nwGtpv2cUlpPing(&ulpObj, 
+////                        inet_addr(targetIpStr),
+////                        4,
+////                        10,
+////                        2,
+////                        3);
+////  NW_ASSERT(NW_OK == rc);
+//
+//  /*---------------------------------------------------------------------------
+//   * Install signal handler 
+//   *--------------------------------------------------------------------------*/
+//  //signal(SIGINT, nwEgtPingHandleSignal);
+//
+//  /*---------------------------------------------------------------------------
+//   * Event loop 
+//   *--------------------------------------------------------------------------*/
+//
+//  //NW_EVT_LOOP();
+//  //NW_LOG(NW_LOG_LEVEL_ERRO, "Exit from eventloop, no events to process!");
+//
+//  /*---------------------------------------------------------------------------
+//   *  Destroy Gtpv2c Stack Instance
+//   *--------------------------------------------------------------------------*/
+//}
+//
+//void S4Finalize() {
+//  NwRcT rc = nwGtpv2cFinalize(hGtpv2cStack);
+//  if(rc != NW_OK)
+//  {
+//    NW_LOG(NW_LOG_LEVEL_ERRO, "Failed to finalize gtpv2c stack instance. Error '%u' occured", rc);
+//  }
+//}
 
 //NwRcT tukabel_tunel_test(NwGtpv2cNodeUlpT* thiz,NwU32T peerIp)
 //{
@@ -473,6 +489,17 @@ void S4Finalize() {
 //  return rc;
 //}
 
+void sgsn_s4_tukabel_loop()
+{
+
+  NW_EVT_LOOP();
+
+  NW_SAE_GW_LOG(NW_LOG_LEVEL_ERRO, "Exit from eventloop, no events to process!");
+
+}
+
+
+// thread function to run nw event loop
 void sgsn_s4_initialize() {
   NwRcT rc; 
   
@@ -482,6 +509,10 @@ void sgsn_s4_initialize() {
   // TODO: load from config or args
   saeGw.numOfUe         = 100;
   saeGw.sgsnUlp.s4cIpv4Addr = ntohl(inet_addr("127.0.4.4"));
+  strncpy((char*)saeGw.apn, "internet", 1023);
+  saeGw.ippoolSubnet    = ntohl(inet_addr("192.168.128.0"));
+  saeGw.ippoolMask      = ntohl(inet_addr("255.255.255.0"));
+  saeGw.isCombinedGw    = NW_FALSE;
   
   /*---------------------------------------------------------------------------
    *  Initialize event library
@@ -514,22 +545,41 @@ void sgsn_s4_initialize() {
    * Event Loop 
    *--------------------------------------------------------------------------*/
 
-  NW_EVT_LOOP();
-
-  NW_SAE_GW_LOG(NW_LOG_LEVEL_ERRO, "Exit from eventloop, no events to process!");
+//  NW_EVT_LOOP();
+//
+//  NW_SAE_GW_LOG(NW_LOG_LEVEL_ERRO, "Exit from eventloop, no events to process!");
+  
+    // thread to run nw event loop
+    rc = pthread_create( &nw_loop_thread, NULL, sgsn_s4_tukabel_loop, NULL);
+    if(rc)
+    {
+        fprintf(stderr,"Error - pthread_create() return code: %d\n", rc);
+        exit(EXIT_FAILURE);
+    }
 
   /*---------------------------------------------------------------------------
    * Finalize SAE GW 
    *--------------------------------------------------------------------------*/
-
-  rc =  nwSaeGwFinalize(&saeGw);
-  NW_ASSERT(NW_OK == rc);
-
-  rc =  nwMemFinalize();
-  NW_ASSERT(NW_OK == rc);
+//
+//  rc =  nwSaeGwFinalize(&saeGw);
+//  NW_ASSERT(NW_OK == rc);
+//
+//  rc =  nwMemFinalize();
+//  NW_ASSERT(NW_OK == rc);
  
 }
 
+void sgsn_s4_finalize()
+{
+    NwRcT rc; 
+    
+    pthread_join(nw_loop_thread, NULL);
+    rc =  nwSaeGwFinalize(&saeGw);
+    NW_ASSERT(NW_OK == rc);
+
+    rc =  nwMemFinalize();
+    NW_ASSERT(NW_OK == rc);
+}
 
 NwRcT nwSaeGwInitialize(NwSaeGwT* thiz)
 {
@@ -597,7 +647,7 @@ NwRcT nwSaeGwInitialize(NwSaeGwT* thiz)
     strncpy((char*)cfg.apn, (const char*)thiz->apn, 1023);
 
     pGw = nwSaeGwUlpNew(); 
-    rc = nwSaeGwUlpInitialize(pGw, NW_SAE_GW_TYPE_SGW, &cfg);
+    rc = nwSaeGwUlpInitialize(pGw, NW_SAE_GW_TYPE_SGSN, &cfg);
     NW_ASSERT( NW_OK == rc );
     thiz->sgsnUlp.pGw = pGw;
   }
