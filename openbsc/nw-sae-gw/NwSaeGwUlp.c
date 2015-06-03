@@ -764,6 +764,10 @@ nwSaeGwUlpCreateUeSession(NwSaeGwUlpT* thiz, NwSaeGwUeT **ppUe)
   {
     pUe = nwSaeGwUeNew(0, 0, thiz->pgw.s5c.hGtpv2cStack);
   }
+  else if(thiz->saeGwType == NW_SAE_GW_TYPE_SGSN)
+  {
+    pUe = nwSaeGwUeNew(0, 0, thiz->sgsn.s4c.hGtpv2cStack);
+  }
 
   if(pUe)
   {
@@ -772,7 +776,12 @@ nwSaeGwUlpCreateUeSession(NwSaeGwUlpT* thiz, NwSaeGwUeT **ppUe)
       pUe->hSgw       = (NwU32T) thiz;
       pUe->hPgw       = (NwU32T) NULL;
     }
-    else
+    else if(thiz->saeGwType == NW_SAE_GW_TYPE_PGW)
+    {
+      pUe->hPgw       = (NwU32T) thiz;
+      pUe->hSgw       = (NwU32T) NULL;
+    }
+    else if(thiz->saeGwType == NW_SAE_GW_TYPE_SGSN)
     {
       pUe->hPgw       = (NwU32T) thiz;
       pUe->hSgw       = (NwU32T) NULL;

@@ -165,6 +165,7 @@ typedef struct NwSaeGwUe
   NwU32T                        sessionType;
   NwU32T                        hSgw;
   NwU32T                        hPgw;
+  NwU32T                        hSgsn;
   NwUeStateT                    state;
 
   NwGtpv2cStackHandleT          hGtpv2cStackSgwS11;
